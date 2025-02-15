@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDL Setup</title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            
+            <div class="container mt-5 col-8 col-md-6">
+
+                <h1 class="mb-4">FHD/eppsilon pipeline on Oscar</h1>
+
+                <p>The <span>FHD/eppsilon</span> pipeline is described in detail in 
+                    <a href="https://arxiv.org/abs/1901.02980" target="_blank">Barry et al. 2019a</a>.
+                </p>
+
+
+                <h2 id="idl-startup">Starting up IDL</h2>
+
+                <p>
+                    To run <span>FHD</span>, we must first make sure we can run IDL on 
+                    <a href="https://docs.ccv.brown.edu/oscar" target="_blank">Oscar</a>. 
+                    CCV takes care of maintaining access to the license, but their 
+                    documentation tends to fall out of date pretty fast (especially 
+                    given the small amount of IDL users on Oscar). As of February 2025, 
+                    here are the instructions to set up IDL on Oscar.
+                </p>
+
+                <ol>
+                    <li class="mt-2">
+                        Load the module via
+
+                        <div class="code-container mt-2">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+$ module load idl
+                            </code></pre>
+                        </div>
+
+                        This should set up the <span>idl</span> environment variable 
+                        allowing you to start up the IDE.
+
+                    </li>
+
+                    <li class="mt-2">
+                        Run the following:
+
+                        <div class="code-container mt-2">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+$ source /oscar/runtime/software/external/idl/idl89//bin/idl_setup.bash
+                            </code></pre>
+                        </div>
+
+                        This takes care of correctly setting up the license.
+
+                    </li>
+                </ol>
+
+            <p>If the setup is successful, running <span>idl</span> should return something like this:</p>
+
+            <div class="code-container mt-2">
+                <div class="code-header">shell</div>
+                <pre class="custom-code"><code class="language-shell">
+IDL 8.9.0 (linux x86_64 m64).
+(c) 2023, L3Harris Geospatial Solutions, Inc.
+
+Licensed for use by: Brown University
+License: 404974
+IDL>
+                </code></pre>
+            </div>
+
+            <h2 id="fhd-deps">FHD Dependencies</h2>
+
+                <p>
+                    <span>FHD</span> has a lot of dependencies that need to be downloaded in order 
+                    for it to run properly. This is detailed in their 
+                    <a href="https://github.com/EoRImaging/FHD" target="_blank">GitHub repo</a>.
+                </p>
+
+                <p>
+                    One important thing to note is that IDL dependencies are downloaded 
+                    but <em>not</em> installed. You only need to download the source 
+                    directory (typically via <span>git clone</span>) and point your IDL script 
+                    to it! I would recommend creating a clean directory to store all these 
+                    dependencies in; for example:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ mkdir ~/fhd_deps
+                    </code></pre>
+                </div>
+
+                <p>Let's go through all the dependencies one at a time.</p>
+
+                <ol type="a">
+
+                    <li class="mb-2">
+
+                        <p>
+                            The<a href="https://github.com/EoRImaging/FHD" target="_blank">FHD repository</a>. This is 
+                            pretty straight forward. From inside the <span>fhd_deps</span> 
+                            directory, run:
+                        </p>
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:EoRImaging/FHD.git
+                            </code></pre>
+                        </div>
+
+                        <p>This downloads the <span>FHD</span> source folder at <span>~/fhd_deps/FHD</span>.</p>
+                    </li>
+
+                    <li class="mb-2">
+                        <p>The<a href="https://github.com/EoRImaging/fhdps_utils" target="_blank">fhd utils</a> 
+                            directory. Once again, using <span>git clone</span>:</p>
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:EoRImaging/fhdps_utils.git
+                            </code></pre>
+                        </div>
+                    </li>
+
+                    <li class="mb-2">
+                        <p>The NASA<a href="https://github.com/wlandsman/IDLAstro" target="_blank">astro IDL</a>
+                            library. Via:</p>
+                            
+                            <div class="code-container mt-3">
+                                <div class="code-header">shell</div>
+                                <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:wlandsman/IDLAstro.git
+                                </code></pre>
+                            </div>
+                    </li>
+
+                    <li class="mb-2">
+                        <p>The <a href="https://github.com/idl-coyote/coyote" target="_blank">coyote</a>
+                        library. Via:</p>
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:idl-coyote/coyote.git
+                            </code></pre>
+                        </div>
+
+                    </li>
+            
+
+
+                    <li class="mb-2">
+                        <p>The<a href="https://healpix.sourceforge.io/" target="_blank">HEALPix</a>
+                            library. 
+                            <strong>NOTE:</strong> This package actually needs to be downloaded 
+                            <em>and</em> installed. Let's start with the download part.
+                        </p>
+
+
+
+                        <ol type="i">
+
+                            <li class="mb-2">
+                                <p>
+                                    On your own computer (i.e. <em>not</em> on Oscar), 
+                                    navigate to<a href="https://sourceforge.net/projects/healpix/" target="_blank">the SourceForge HEALPix project</a>
+                                    and click on the green download button.
+                                </p>
+                            </li>
+
+                            <li class="mb-2">
+                                <p>
+                                This downloads a compressed <span>.tar.gz</span> file to your computer. It should look like this: 
+                                </p>
+
+                                <div class="code-container mt-3">
+                                    <div class="code-header">shell</div>
+                                    <pre class="custom-code"><code class="language-shell">
+[~/Downloads]$ ls
+Healpix_3.83_2024Nov13.tar.gz
+                                    </code></pre>
+                                </div>
+
+                            </li>
+
+                            <li class="mb-2">
+                                <p>
+                                    To send this over to Oscar (where you actually need it to go), run the following:
+                                </p>
+
+                                <div class="code-container mt-3">
+                                    <div class="code-header">shell</div>
+                                    <pre class="custom-code"><code class="language-shell">
+[~/Downloads]$ scp Healpix_3.83_2024Nov13.tar.gz \
+&lt;brownUsername&gt;@ssh.ccv.brown.edu:~/fhd_utils
+                                    </code></pre>
+                                </div>
+
+                                <p>(The backslash (\) allows you to run a command 
+                                    in the terminal over multiple lines. You can omit it if 
+                                    you want.)</p>
+
+
+                            </li>
+
+
+                            <li class="mb-2">
+                                <p>
+                                    Finally, from inside your <span>~/fhd_deps</span> in Oscar, extract this compressed file:
+                                </p>
+
+                                <div class="code-container mt-3">
+                                    <div class="code-header">shell</div>
+                                    <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ tar -xvzf Healpix_3.83_2024Nov13.tar.gz
+                                    </code></pre>
+                                </div>
+
+                                <p>This should create a <span>Healpix_3.83</span> folder in 
+                                    <span>~/fhd_deps</span>. At this point, you can get 
+                                    rid of the compressed file:</p>
+
+                                <div class="code-container mt-3">
+                                    <div class="code-header">shell</div>
+                                    <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ rm Healpix_3.83_2024Nov13.tar.gz
+                                    </code></pre>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <p><strong>NOTE:</strong> If you know a better way to directly download this to Oscar, please let me know! Otherwise, this is a little annoying but pretty much fail-proof.)
+                        </p>
+                        
+
+                        <p>Now that the HEALPix folder is securely downloaded to your
+                            <span>fhd_deps</span>, the software must be installed. 
+                            In the <span>Healpix_3.83</span> folder, you should find a 
+                            text file called <span>INSTALL</span>. You can open it and read it. 
+                            The only relevant section for us is the following:</p>
+
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+Configuring the IDL package
+---------------------------
+
+The 
+    ./configure [-L]   [--auto=idl]
+script *must* be run to ensure that the HEALPix IDL routines will be available
+and to select the softwares used to visualize the images (Postscript and Png) 
+created by those routines.
+Then the
+    hidl
+    hidlde
+commands will give you access to IDL augmented of HEALPix routines.
+
+For more information on the IDL package type
+    healpix_doc, /html
+or
+    healpix_doc, /pdf
+from within IDL
+
+or see
+    doc/html/idl.htm
+    doc/pdf/idl.pdf
+                            </code></pre>
+                        </div>
+
+
+                        <p>As suggested by this message, you first want to navigate 
+                            inside the <span>Healpix_3.83</span> folder and run 
+                            the following:</p>
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps/Healpix_3.83]$ ./configure
+                            </code></pre>
+                        </div>
+
+                        <p>You should see a UI pop up that looks something like this:</p>
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+*************************
+Welcome to Healpix 3.83
+*************************
+
+This interactive script takes care of the configuration and compilation
+of the C, C++, F90, IDL and Python packages of the Healpix distribution.
+Default answers are shown in brakets [].
+An automatic mode is accessible with the flag --auto=
+See  ./configure -h  for more information.
+
+If the environment variables
+        CC,            (used in C,sharp,C++,F90,healpy)
+        C_FITS, C_SHARED       (C)
+        CXX,                           (C++,    healpy)
+        CXXFLAGS, CXX_PARAL            (C++)
+        SHARP_COPT, SHARP_PARAL  (sharp)
+        FC, F_AR, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED (F90)
+        FITSDIR,               (C,      C++,F90)
+        FITSINC,               (C,      C++)
+        PYTHON, PIPARGS                        (healpy)
+        PROFILE_EDIT           (profile)
+        papersize, ps_com, pdf_com, gif_com       (IDL)
+    are defined prior to calling 'configure', they will
+    be used as default values in the interactive or automated configuration process.
+
+
+Do you want to:
+(0): exit
+(1): configure Healpix IDL package
+(2): configure Healpix C   package, and edit Makefile
+(3): configure Healpix F90 package, and edit Makefile
+(4): configure Healpix C++ package, and edit Makefile
+(5): configure Healpix Python (healpy) package, and edit Makefile
+(7): configure, compile and install libsharp package, and edit Makefile
+(8): see what configuration files have been created so far
+(9): edit your shell configuration file to have easier access to Healpix codes
+(-1): reset
+    (will *REMOVE* the Makefile and configuration files, and exit)
+(0): exit
+
+Enter your choice (configuration of packages can be done in any order) [0]:
+                            </code></pre>
+                        </div>
+
+
+                    <p>Simply enter <span>1</span>and keep hitting "Enter" 
+                        to accept all the default values. Finally, we need to 
+                        make sure the <span>HEALPIX</span> environment variable is 
+                        correctly set. Open up your <span>.bashrc</span> file using your 
+                        favorite text editor; for example:
+                    </p>
+
+
+                    <div class="code-container mt-3">
+                        <div class="code-header">shell</div>
+                        <pre class="custom-code"><code class="language-shell">
+$ nano ~/.bashrc
+                        </code></pre>
+                    </div>
+
+                    <p>
+                        Scroll to the bottom and copy-and-paste the following:
+                    </p>
+
+
+                    <div class="code-container mt-3">
+                        <div class="code-header">bash</div>
+                        <pre class="custom-code"><code class="language-bash">
+# Set up HEALPix environment variable
+export HEALPIX=/ABSOLUTE/PATH/TO/fhd_deps/Healpix_3.83
+                        </code></pre>
+                    </div>
+
+                    <p>
+                        (<strong>IMPORTANT</strong>: Make sure to replace 
+                        <span>/ABSOLUTE/PATH/TO/</span> with the <em>absolute</em>
+                        path pointing to your <span>fhd_deps</span> folder; for example,
+                        in my case, I would write <span>/users/jmduchar/data/jmduchar/fhd_deps</span>.
+                        If you don't know what the absolute path for your <span>fhd_deps</span>
+                        folder is, simply navigate inside it and type <span>pwd</span>.)
+                    </p>
+
+                    <p>To make the changes take place immediately, run:
+                    </p>
+
+                    <div class="code-container mt-3">
+                        <div class="code-header">shell</div>
+                        <pre class="custom-code"><code class="language-shell">
+$ source ~/.bashrc
+                        </code></pre>
+                    </div>
+
+                    <p>The <span>.bashrc</span> file is sourced every time you open 
+                        up an Oscar terminal. Anything you define there will 
+                        be accessible in any new terminal session.
+                    </p>
+
+                    <p>That's it! HEALPix should now be successfully installed!</p>
+                    </li>
+
+                <li class="mb-2">
+
+                    <p>Optional: the<a href="https://github.com/EoRImaging/eppsilon/" target="_blank">eppsilon</a>
+                        power spectrum generation code. In practice, if you 
+                        are reading this tutorial, you will probably need 
+                        <span>eppsilon</span>. Go ahead and download it via:
+                    </p>
+
+                    <div class="code-container mt-3">
+                        <div class="code-header">shell</div>
+                        <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:EoRImaging/eppsilon.git
+                        </code></pre>
+                    </div>
+                </li>
+
+                <li>
+
+                    <p>
+                        Imagemagick. This dependency is 
+                        detailed<a href="https://imagemagick.org/index.php" target="_blank">here</a>, but 
+                         the good thing is we don't actually have to download or install it! 
+                         Oscar has a module for it already! Simply run:
+                    </p>
+
+                     <div class="code-container mt-3">
+                        <div class="code-header">shell</div>
+                        <pre class="custom-code"><code class="language-shell">
+$ module load imagemagick
+                        </code></pre>
+                    </div>
+                </li>
+
+                <p>
+                    This should cover all the required <span>FHD</span> dependencies! 
+                    Next up, let's make sure IDL can correctly access them.
+                </p>
+                </ol>
+
+
+    <h2 id="dep-link-test">Dependency Linking and Testing</h2>
+
+    <p>Whenever you fire up the IDL IDE, it takes a look at the
+        <span>IDL_STARTUP</span> environment variable and runs whatever 
+         IDL script this variable points to. To make sure all our dependencies 
+         are correctly loaded to use FHD, we need to create an
+         <span>idl_startup.pro</span> file and populate it with the
+           paths to all our dependencies.
+    </p>
+
+    <h3 id="idl-startup-file">IDL Startup File</h3>
+
+
+    <p>
+        In any folder you want (but I would recommend sticking 
+        to <span>fhd_deps</span> so that all your <span>FHD</span>
+        stuff lives in the same place), create an <span>idl_startup.pro</span> file:
+    </p>
+
+    <div class="code-container mt-3">
+        <div class="code-header">shell</div>
+        <pre class="custom-code"><code class="language-shell">
+$ touch idl_startup.pro
+        </code></pre>
+    </div>
+
+    <p>Open up this file:</p>
+
+    <div class="code-container mt-3">
+        <div class="code-header">shell</div>
+        <pre class="custom-code"><code class="language-shell">
+$ nano idl_startup.pro
+        </code></pre>
+    </div>
+
+    <p>Copy-and-paste the following:</p>
+
+    <div class="code-container mt-3">
+        <div class="code-header">idl</div>
+        <pre class="custom-code"><code class="language-bash">
+; Set IDL Library Paths
+!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/FHD') + ':' + !PATH
+!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/IDLAstro') + ':' + !PATH
+!PATH = Expand_Path('/ABSOLUTE/PATH/TO/fhd_deps/coyote') + ':' + !PATH
+!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/eppsilon') + ':' + !PATH
+!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/Healpix_3.83') + ':' + !PATH
+!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/fhdps_utils') + ':' + !PATH
+        </code></pre>
+    </div>
+
+    <p>Once again, make sure to replace 
+        <span>ABSOLUTE/PATH/TO</span> with the absolute path to 
+        your <span>fhd_deps</span> folder.
+    </p>
+
+    <p>Once this is done, save and close the file. Next, 
+        open up your <span>.bashrc</span> file:</p>
+
+    <div class="code-container mt-3">
+        <div class="code-header">shell</div>
+        <pre class="custom-code"><code class="language-shell">
+$ nano ~/.bashrc
+        </code></pre>
+    </div>
+
+    <p>Add the following lines:</p>
+
+    <div class="code-container mt-3">
+        <div class="code-header">bash</div>
+        <pre class="custom-code"><code class="language-bash">
+# Set up IDL startup file
+export IDL_STARTUP=/ABSOLUTE/PATH/TO/fhd_deps/idl_startup.pro
+        </code></pre>
+    </div>
+
+    <p>Once again, make sure to replace 
+        <span>ABSOLUTE/PATH/TO</span> with the absolute path to 
+        your <span>fhd_deps</span> folder.
+    </p>
+
+
+
+
+    <h3 id="fhd-env-sourcing">FHD Environment Sourcing</h3>
+
+
+    <p>When you open a new terminal in Oscar, it forgets about all the
+         modules you loaded in any previous session and any of its 
+         environment variables (unless you've specified them in your
+         <span>.bashrc</span>). To avoid having to manually type 
+          them in every time, you have two options:</p>
+
+
+          <ol>
+            <li>
+                First, you can add the following lines to your <span>.bashrc</span>:
+
+                <div class="code-container mt-3">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+module load imagemagick
+module load idl
+source /oscar/runtime/software/external/idl/idl89/bin/idl_setup.bash
+                    </code></pre>
+                </div>
+
+                <p>To make the changes immediately effective, follow up with:</p>
+
+                <div class="code-container mt-3">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ source ~/.bashrc
+                    </code></pre>
+                </div>
+
+                <p>Note that if you use this method,
+                    <span>imagemagick</span> and <span>idl</span> will 
+                     be loaded and ready to use every single time you 
+                     open a new Oscar session.
+                </p>
+            </li>
+
+            <li>
+                <p>(Preferred method) Alternatively, you can create a 
+                    new bash script; for example:</p>
+
+                <div class="code-container mt-3">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ touch fhd_env.sh
+                    </code></pre>
+                </div>
+
+                <p>In this file, copy-and-paste the same lines:</p>
+
+                <div class="code-container mt-3">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+module load imagemagick
+module load idl
+source /oscar/runtime/software/external/idl/idl89/bin/idl_setup.bash
+                    </code></pre>
+                </div>
+
+                <p>Now, whenever you need to use <span>FHD</span>, run:
+                </p>
+
+                <div class="code-container mt-3">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ source ~/fhd_deps/fhd_env.sh
+                    </code></pre>
+                </div>
+
+                <p>Note that this is my preferred method because, 
+                    once you start using <span>FHD</span> a little more seriously, 
+                    you will mostly be interacting with Oscar via <span>batch</span>
+                    scripts in order to submit large-memory jobs. You can simply 
+                    add <span>source ~/fhd_deps/fhd_env.sh</span> to any <span>batch</span>
+                    script to configure the job for <span>FHD</span>.</p>
+
+
+            </li>
+          </ol>
+
+
+
+    <h3 id="test-file">Test File</h3>
+
+    <p>To make sure that <span>FHD</span> and all its dependencies 
+        are correctly accessible to IDL, we will first create a test file:</p>
+
+
+
+
+
+
+
+
+            <p class="last-edit">Last edit: 2025-02-15</p>
+
+            </div>
+            
+            <div class="d-none d-md-block col-md-3">
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/fortran.min.js" integrity="sha512-B8L+Rr5tEGmVUSL3gl6i/mn+MvzxPr6U/ijcTx1tL7zHIxBm8x3XDjLZ7K9/HAEDuq2x/Zwv8dzPXgXy+Fn8Fg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="../assets/js/load-templates.js"></script>
+<script src="../assets/js/copy-code.js"></script>
+<script src="../assets/js/page-navigation-buttons.js"></script>

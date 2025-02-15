@@ -4,6 +4,10 @@
     }
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 
 li a {
     margin-left: 10px;
@@ -20,10 +24,10 @@ a div.fa {
 }
 
 .custom-vertical-nav ul {
-    padding-left: 15px;
+    position: fixed;
 }
 
-.mono-span {
+span {
     font-family: monospace;
 }
 
@@ -73,4 +77,14 @@ pre code {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     border-radius: 0px 0px 8px 8px;
+}
+
+.last-edit {
+    font-size: 0.75em;
+    opacity: 0.75;
+}
+
+h2, h3 {
+    margin-top:40px;
+    margin-bottom: 40px;
 }

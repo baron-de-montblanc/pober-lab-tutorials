@@ -13,8 +13,7 @@ async function loadTemplate(id, file, callback) {
 
 // jQuery-based function to initialize dropdown menus
 function initializeNavbarDropdowns() {
-    console.log("Re-initializing navbar dropdowns...");
-    
+
     $(document).ready(function () {
         $('.sub-menu ul').hide();
     
@@ -22,7 +21,7 @@ function initializeNavbarDropdowns() {
             let hasSubmenu = $(this).parent(".sub-menu").children("ul").length > 0;
     
             if (hasSubmenu) {
-                e.preventDefault();  // Prevents jumping to # ONLY if there's a submenu
+                e.preventDefault();  // Prevents jumping pages ONLY if there's a submenu
                 $(this).parent(".sub-menu").children("ul").slideToggle(100);
                 $(this).find(".right").toggleClass("fa-caret-right fa-caret-down");
             }
@@ -34,6 +33,7 @@ function initializeNavbarDropdowns() {
 // Load navbar and reapply jQuery event listeners
 document.addEventListener("DOMContentLoaded", function () {
     loadTemplate("header-container", "../partials/header.html");
+    loadTemplate("footer-template", "../partials/footer.html")
     loadTemplate("navbar-template", "../partials/navbar-template.html", initializeNavbarDropdowns);
 });
 
