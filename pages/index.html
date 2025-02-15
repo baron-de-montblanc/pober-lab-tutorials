@@ -5,25 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pober Lab Starter Pack</title>
     <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link 
-        rel="stylesheet" 
-        href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" 
-        integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" 
-        crossorigin="anonymous"
-    >
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    >
-    <link 
-        rel="stylesheet" 
-        href="../assets/css/vertical-navbar.css"
-    >
-    <link 
-        rel="stylesheet" 
-        href="../assets/css/index.css"
-    >
 </head>
 <body>
     
@@ -34,7 +20,7 @@
             
             <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
             
-            <div class="container text-center mt-5 col-8 col-md-6">
+            <div class="container mt-5 col-8 col-md-6">
                 <h1 class="mb-4">Pober Lab Starter Pack</h1>
                 <p>
                     Welcome! This web page is intended as a short series of tutorials
@@ -42,6 +28,27 @@
                     at Brown University. For more information, please visit our
                     <a href="https://sites.brown.edu/poberlab/" target="_blank">official group web page</a>.
                 </p>
+
+                <h2 class="mb-4">Before getting started</h2>
+                <p>
+                    This guide contains a variety of tutorials, most of which have to
+                    do with setting up various software on 
+                    <a href="https://docs.ccv.brown.edu/oscar" target="_blank">Oscar</a>, 
+                    Brown University's high-performance computing cluster. 
+                    All interactions with Oscar and relevant software will be done 
+                    strictly through the terminal.
+                </p>
+                <p>
+                    To avoid confusion, I will use the following format for commands:
+                </p>
+
+                <div class="code-container">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[/your/working/directory]$ command-you-should-type
+                    </code></pre>
+                </div>
+
             </div>
             
             <div class="d-none d-md-block col-md-3">
@@ -51,6 +58,15 @@
 </body>
 </html>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="../assets/js/load-templates.js"></script>
+<script src="../assets/js/copy-code.js"></script>
