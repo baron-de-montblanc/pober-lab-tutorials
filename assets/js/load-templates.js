@@ -2,19 +2,18 @@ async function loadTemplate(id, file, callback) {
     let element = document.getElementById(id);
     if (element) {
         let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
-        let fetchPath = `${basePath}${file}`; // Ensure correct path
+        
+        // Prevent duplicate basePath issue
+        let fetchPath = file.startsWith("/") ? `${basePath}${file}` : `${basePath}/${file}`;
 
         console.log(`Fetching: ${fetchPath}`);  // Debugging output
 
-        let response = await fetch(fetchPath);  // ✅ Use fetchPath directly!
+        let response = await fetch(fetchPath);  // ✅ Correct path usage
 
         if (response.ok) {
             element.innerHTML = await response.text();
-
-            // Adjust relative links inside dynamically loaded content
             fixTemplateLinks(element, basePath);
-
-            if (callback) callback(); // Run callback after template loads
+            if (callback) callback(); 
         } else {
             console.error(`Error loading ${fetchPath}: ${response.statusText}`);
         }
