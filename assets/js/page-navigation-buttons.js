@@ -11,20 +11,22 @@ const observer = new MutationObserver(() => {
 observer.observe(document.body, { childList: true, subtree: true });
 
 function addNavigationButtons(footer) {
+    let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
+
     // Define ordered list of pages
     const pageList = [
-        "/index.html",
-        "/pages/page1-idl-setup.html",
-        "/pages/page2-fhd-deps.html",
-        "/pages/page3-dep-link-test.html",
-        "/pages/page4-summary.html",
-        "/pages/page5-examples.html",
-        "/pages/wsclean1-oscar.html",
-        "/pages/wsclean2-usage.html",
+        `${basePath}/index.html`,
+        `${basePath}/pages/page1-idl-setup.html`,
+        `${basePath}/pages/page2-fhd-deps.html`,
+        `${basePath}/pages/page3-dep-link-test.html`,
+        `${basePath}/pages/page4-summary.html`,
+        `${basePath}/pages/page5-examples.html`,
+        `${basePath}/pages/wsclean1-oscar.html`,
+        `${basePath}/pages/wsclean2-usage.html`,
     ];
 
     // Get current page filename, default to "index.html"
-    const currentPage = window.location.pathname || "/index.html";
+    const currentPage = window.location.pathname || `${basePath}/index.html`;
 
     // Find current page index
     const currentIndex = pageList.indexOf(currentPage);

@@ -32,9 +32,11 @@ function initializeNavbarDropdowns() {
 
 // Load navbar and reapply jQuery event listeners
 document.addEventListener("DOMContentLoaded", function () {
-    loadTemplate("header-container", "/partials/header.html");
-    loadTemplate("footer-template", "/partials/footer.html")
-    loadTemplate("navbar-template", "/partials/navbar-template.html", initializeNavbarDropdowns);
+    let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
+
+    loadTemplate("header-container", `${basePath}/partials/header.html`);
+    loadTemplate("footer-template", `${basePath}/partials/footer.html`)
+    loadTemplate("navbar-template", `${basePath}/partials/navbar-template.html`, initializeNavbarDropdowns);
 });
 
 
