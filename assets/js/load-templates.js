@@ -2,7 +2,11 @@ async function loadTemplate(id, file, callback) {
     let element = document.getElementById(id);
     if (element) {
         let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
-        let response = await fetch(`${basePath}${file}`);
+        let fetchPath = `${basePath}${file}`; // Ensure correct path
+
+        console.log(`Fetching: ${fetchPath}`);  // Debugging output
+
+        let response = await fetch(fetchPath);  // ✅ Use fetchPath directly!
 
         if (response.ok) {
             element.innerHTML = await response.text();
@@ -12,10 +16,11 @@ async function loadTemplate(id, file, callback) {
 
             if (callback) callback(); // Run callback after template loads
         } else {
-            console.error(`Error loading ${file}: ${response.statusText}`);
+            console.error(`Error loading ${fetchPath}: ${response.statusText}`);
         }
     }
 }
+
 
 // Function to fix all <a> links inside a dynamically loaded template
 function fixTemplateLinks(container, basePath) {
