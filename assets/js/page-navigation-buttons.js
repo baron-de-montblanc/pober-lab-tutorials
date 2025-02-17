@@ -1,7 +1,7 @@
 const observer = new MutationObserver(() => {
     const footer = document.getElementById("footer");
     if (footer) {
-        console.log("✅ Footer detected, running script...");
+        // console.log("✅ Footer detected, running script...");
         observer.disconnect(); // Stop observing once footer is found
         addNavigationButtons(footer);
     }
@@ -13,18 +13,18 @@ observer.observe(document.body, { childList: true, subtree: true });
 function addNavigationButtons(footer) {
     // Define ordered list of pages
     const pageList = [
-        "index.html",
-        "page1-idl-setup.html",
-        "page2-fhd-deps.html",
-        "page3-dep-link-test.html",
-        "page4-summary.html",
-        "page5-examples.html",
-        "wsclean1-oscar.html",
-        "wsclean2-usage.html",
+        "/index.html",
+        "/pages/page1-idl-setup.html",
+        "/pages/page2-fhd-deps.html",
+        "/pages/page3-dep-link-test.html",
+        "/pages/page4-summary.html",
+        "/pages/page5-examples.html",
+        "/pages/wsclean1-oscar.html",
+        "/pages/wsclean2-usage.html",
     ];
 
     // Get current page filename, default to "index.html"
-    const currentPage = window.location.pathname.split("/").pop() || "index.html";
+    const currentPage = window.location.pathname || "/index.html";
 
     // Find current page index
     const currentIndex = pageList.indexOf(currentPage);
@@ -37,8 +37,8 @@ function addNavigationButtons(footer) {
     const prevPage = currentIndex > 0 ? pageList[currentIndex - 1] : null;
     const nextPage = currentIndex < pageList.length - 1 ? pageList[currentIndex + 1] : null;
 
-    console.log("⬅️ Previous Page:", prevPage);
-    console.log("➡️ Next Page:", nextPage);
+    // console.log("⬅️ Previous Page:", prevPage);
+    // console.log("➡️ Next Page:", nextPage);
 
     // Create navigation container
     const navContainer = document.createElement("div");
