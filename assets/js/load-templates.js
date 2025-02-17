@@ -32,9 +32,9 @@ function initializeNavbarDropdowns() {
 
 // Load navbar and reapply jQuery event listeners
 document.addEventListener("DOMContentLoaded", function () {
-    loadTemplate("header-container", "../partials/header.html");
-    loadTemplate("footer-template", "../partials/footer.html")
-    loadTemplate("navbar-template", "../partials/navbar-template.html", initializeNavbarDropdowns);
+    loadTemplate("header-container", "/partials/header.html");
+    loadTemplate("footer-template", "/partials/footer.html")
+    loadTemplate("navbar-template", "/partials/navbar-template.html", initializeNavbarDropdowns);
 });
 
 
