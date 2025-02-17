@@ -26,7 +26,7 @@ function addNavigationButtons(footer) {
     ];
 
     // Get current page filename, default to "index.html"
-    const currentPage = !window.location.pathname || window.location.pathname === `/${basePath}`
+    const currentPage = !window.location.pathname || window.location.pathname === `${basePath}/`
     ? `${basePath}/index.html` 
     : window.location.pathname;
 
