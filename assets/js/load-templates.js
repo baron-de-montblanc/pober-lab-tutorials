@@ -3,19 +3,16 @@ async function loadTemplate(id, file, callback) {
     if (element) {
         let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
         
-        // Prevent duplicate basePath issue
-        let fetchPath = file.startsWith("/") ? `${basePath}${file}` : `${basePath}/${file}`;
+        console.log(`Fetching: ${file}`);  // Debugging output
 
-        console.log(`Fetching: ${fetchPath}`);  // Debugging output
-
-        let response = await fetch(fetchPath);  // ✅ Correct path usage
+        let response = await fetch(file);  // ✅ Correct path usage
 
         if (response.ok) {
             element.innerHTML = await response.text();
             fixTemplateLinks(element, basePath);
             if (callback) callback(); 
         } else {
-            console.error(`Error loading ${fetchPath}: ${response.statusText}`);
+            console.error(`Error loading ${file}: ${response.statusText}`);
         }
     }
 }
