@@ -23,8 +23,15 @@ a div.fa {
     top: 12px;
 }
 
-.custom-vertical-nav ul {
-    position: fixed;
+
+.custom-vertical-nav {
+    position: sticky;
+    top:0px;
+    left: 0.5em;
+}
+
+ul.list-unstyled {
+    padding-left: 1.5em;
 }
 
 span {
@@ -87,4 +94,48 @@ pre code {
 h2, h3 {
     margin-top:40px;
     margin-bottom: 40px;
+}
+
+a {
+    margin-left: 0px !important;
+}
+
+
+ul.tree-ul {
+    list-style: none; /* Remove default bullets */
+    padding-left: 20px;
+    font-family: monospace;
+}
+
+ul.tree-ul li {
+    position: relative;
+    padding-left: 20px;
+}
+
+ul.tree-ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #222222;
+}
+
+ul.tree-ul li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 10px;
+    height: 1px;
+    background-color: #222222;
+}
+
+ul.tree-ul li:last-child::before {
+    height: 12px; /* Stop vertical line at last child */
+}
+
+.tutorial-image {
+    width: 70%;
 }

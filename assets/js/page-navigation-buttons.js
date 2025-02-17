@@ -14,7 +14,13 @@ function addNavigationButtons(footer) {
     // Define ordered list of pages
     const pageList = [
         "index.html",
-        "fhd-eppsilon.html",
+        "page1-idl-setup.html",
+        "page2-fhd-deps.html",
+        "page3-dep-link-test.html",
+        "page4-summary.html",
+        "page5-examples.html",
+        "wsclean1-oscar.html",
+        "wsclean2-usage.html",
     ];
 
     // Get current page filename, default to "index.html"

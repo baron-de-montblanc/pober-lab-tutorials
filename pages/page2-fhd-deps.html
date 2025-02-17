@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDL Setup</title>
+    <title>FHD Dependencies</title>
     <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -23,67 +23,6 @@
             <div class="container mt-5 col-8 col-md-6">
 
                 <h1 class="mb-4">FHD/eppsilon pipeline on Oscar</h1>
-
-                <p>The <span>FHD/eppsilon</span> pipeline is described in detail in 
-                    <a href="https://arxiv.org/abs/1901.02980" target="_blank">Barry et al. 2019a</a>.
-                </p>
-
-
-                <h2 id="idl-startup">Starting up IDL</h2>
-
-                <p>
-                    To run <span>FHD</span>, we must first make sure we can run IDL on 
-                    <a href="https://docs.ccv.brown.edu/oscar" target="_blank">Oscar</a>. 
-                    CCV takes care of maintaining access to the license, but their 
-                    documentation tends to fall out of date pretty fast (especially 
-                    given the small amount of IDL users on Oscar). As of February 2025, 
-                    here are the instructions to set up IDL on Oscar.
-                </p>
-
-                <ol>
-                    <li class="mt-2">
-                        Load the module via
-
-                        <div class="code-container mt-2">
-                            <div class="code-header">shell</div>
-                            <pre class="custom-code"><code class="language-shell">
-$ module load idl
-                            </code></pre>
-                        </div>
-
-                        This should set up the <span>idl</span> environment variable 
-                        allowing you to start up the IDE.
-
-                    </li>
-
-                    <li class="mt-2">
-                        Run the following:
-
-                        <div class="code-container mt-2">
-                            <div class="code-header">shell</div>
-                            <pre class="custom-code"><code class="language-shell">
-$ source /oscar/runtime/software/external/idl/idl89//bin/idl_setup.bash
-                            </code></pre>
-                        </div>
-
-                        This takes care of correctly setting up the license.
-
-                    </li>
-                </ol>
-
-            <p>If the setup is successful, running <span>idl</span> should return something like this:</p>
-
-            <div class="code-container mt-2">
-                <div class="code-header">shell</div>
-                <pre class="custom-code"><code class="language-shell">
-IDL 8.9.0 (linux x86_64 m64).
-(c) 2023, L3Harris Geospatial Solutions, Inc.
-
-Licensed for use by: Brown University
-License: 404974
-IDL>
-                </code></pre>
-            </div>
 
             <h2 id="fhd-deps">FHD Dependencies</h2>
 
@@ -115,7 +54,7 @@ $ mkdir ~/fhd_deps
                     <li class="mb-2">
 
                         <p>
-                            The<a href="https://github.com/EoRImaging/FHD" target="_blank">FHD repository</a>. This is 
+                            The <a href="https://github.com/EoRImaging/FHD" target="_blank">FHD repository</a>. This is 
                             pretty straight forward. From inside the <span>fhd_deps</span> 
                             directory, run:
                         </p>
@@ -131,7 +70,7 @@ $ mkdir ~/fhd_deps
                     </li>
 
                     <li class="mb-2">
-                        <p>The<a href="https://github.com/EoRImaging/fhdps_utils" target="_blank">fhd utils</a> 
+                        <p>The <a href="https://github.com/EoRImaging/fhdps_utils" target="_blank">fhd utils</a> 
                             directory. Once again, using <span>git clone</span>:</p>
 
                         <div class="code-container mt-3">
@@ -143,7 +82,7 @@ $ mkdir ~/fhd_deps
                     </li>
 
                     <li class="mb-2">
-                        <p>The NASA<a href="https://github.com/wlandsman/IDLAstro" target="_blank">astro IDL</a>
+                        <p>The NASA <a href="https://github.com/wlandsman/IDLAstro" target="_blank">astro IDL</a>
                             library. Via:</p>
                             
                             <div class="code-container mt-3">
@@ -170,7 +109,7 @@ $ mkdir ~/fhd_deps
 
 
                     <li class="mb-2">
-                        <p>The<a href="https://healpix.sourceforge.io/" target="_blank">HEALPix</a>
+                        <p>The <a href="https://healpix.sourceforge.io/" target="_blank">HEALPix</a>
                             library. 
                             <strong>NOTE:</strong> This package actually needs to be downloaded 
                             <em>and</em> installed. Let's start with the download part.
@@ -183,7 +122,7 @@ $ mkdir ~/fhd_deps
                             <li class="mb-2">
                                 <p>
                                     On your own computer (i.e. <em>not</em> on Oscar), 
-                                    navigate to<a href="https://sourceforge.net/projects/healpix/" target="_blank">the SourceForge HEALPix project</a>
+                                    navigate to <a href="https://sourceforge.net/projects/healpix/" target="_blank">the SourceForge HEALPix project</a>
                                     and click on the green download button.
                                 </p>
                             </li>
@@ -407,7 +346,7 @@ $ source ~/.bashrc
 
                 <li class="mb-2">
 
-                    <p>Optional: the<a href="https://github.com/EoRImaging/eppsilon/" target="_blank">eppsilon</a>
+                    <p>Optional: the <a href="https://github.com/EoRImaging/eppsilon/" target="_blank">eppsilon</a>
                         power spectrum generation code. In practice, if you 
                         are reading this tutorial, you will probably need 
                         <span>eppsilon</span>. Go ahead and download it via:
@@ -425,7 +364,7 @@ $ source ~/.bashrc
 
                     <p>
                         Imagemagick. This dependency is 
-                        detailed<a href="https://imagemagick.org/index.php" target="_blank">here</a>, but 
+                        detailed <a href="https://imagemagick.org/index.php" target="_blank">here</a>, but 
                          the good thing is we don't actually have to download or install it! 
                          Oscar has a module for it already! Simply run:
                     </p>
@@ -443,186 +382,6 @@ $ module load imagemagick
                     Next up, let's make sure IDL can correctly access them.
                 </p>
                 </ol>
-
-
-    <h2 id="dep-link-test">Dependency Linking and Testing</h2>
-
-    <p>Whenever you fire up the IDL IDE, it takes a look at the
-        <span>IDL_STARTUP</span> environment variable and runs whatever 
-         IDL script this variable points to. To make sure all our dependencies 
-         are correctly loaded to use FHD, we need to create an
-         <span>idl_startup.pro</span> file and populate it with the
-           paths to all our dependencies.
-    </p>
-
-    <h3 id="idl-startup-file">IDL Startup File</h3>
-
-
-    <p>
-        In any folder you want (but I would recommend sticking 
-        to <span>fhd_deps</span> so that all your <span>FHD</span>
-        stuff lives in the same place), create an <span>idl_startup.pro</span> file:
-    </p>
-
-    <div class="code-container mt-3">
-        <div class="code-header">shell</div>
-        <pre class="custom-code"><code class="language-shell">
-$ touch idl_startup.pro
-        </code></pre>
-    </div>
-
-    <p>Open up this file:</p>
-
-    <div class="code-container mt-3">
-        <div class="code-header">shell</div>
-        <pre class="custom-code"><code class="language-shell">
-$ nano idl_startup.pro
-        </code></pre>
-    </div>
-
-    <p>Copy-and-paste the following:</p>
-
-    <div class="code-container mt-3">
-        <div class="code-header">idl</div>
-        <pre class="custom-code"><code class="language-bash">
-; Set IDL Library Paths
-!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/FHD') + ':' + !PATH
-!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/IDLAstro') + ':' + !PATH
-!PATH = Expand_Path('/ABSOLUTE/PATH/TO/fhd_deps/coyote') + ':' + !PATH
-!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/eppsilon') + ':' + !PATH
-!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/Healpix_3.83') + ':' + !PATH
-!PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/fhdps_utils') + ':' + !PATH
-        </code></pre>
-    </div>
-
-    <p>Once again, make sure to replace 
-        <span>ABSOLUTE/PATH/TO</span> with the absolute path to 
-        your <span>fhd_deps</span> folder.
-    </p>
-
-    <p>Once this is done, save and close the file. Next, 
-        open up your <span>.bashrc</span> file:</p>
-
-    <div class="code-container mt-3">
-        <div class="code-header">shell</div>
-        <pre class="custom-code"><code class="language-shell">
-$ nano ~/.bashrc
-        </code></pre>
-    </div>
-
-    <p>Add the following lines:</p>
-
-    <div class="code-container mt-3">
-        <div class="code-header">bash</div>
-        <pre class="custom-code"><code class="language-bash">
-# Set up IDL startup file
-export IDL_STARTUP=/ABSOLUTE/PATH/TO/fhd_deps/idl_startup.pro
-        </code></pre>
-    </div>
-
-    <p>Once again, make sure to replace 
-        <span>ABSOLUTE/PATH/TO</span> with the absolute path to 
-        your <span>fhd_deps</span> folder.
-    </p>
-
-
-
-
-    <h3 id="fhd-env-sourcing">FHD Environment Sourcing</h3>
-
-
-    <p>When you open a new terminal in Oscar, it forgets about all the
-         modules you loaded in any previous session and any of its 
-         environment variables (unless you've specified them in your
-         <span>.bashrc</span>). To avoid having to manually type 
-          them in every time, you have two options:</p>
-
-
-          <ol>
-            <li>
-                First, you can add the following lines to your <span>.bashrc</span>:
-
-                <div class="code-container mt-3">
-                    <div class="code-header">bash</div>
-                    <pre class="custom-code"><code class="language-bash">
-module load imagemagick
-module load idl
-source /oscar/runtime/software/external/idl/idl89/bin/idl_setup.bash
-                    </code></pre>
-                </div>
-
-                <p>To make the changes immediately effective, follow up with:</p>
-
-                <div class="code-container mt-3">
-                    <div class="code-header">shell</div>
-                    <pre class="custom-code"><code class="language-shell">
-$ source ~/.bashrc
-                    </code></pre>
-                </div>
-
-                <p>Note that if you use this method,
-                    <span>imagemagick</span> and <span>idl</span> will 
-                     be loaded and ready to use every single time you 
-                     open a new Oscar session.
-                </p>
-            </li>
-
-            <li>
-                <p>(Preferred method) Alternatively, you can create a 
-                    new bash script; for example:</p>
-
-                <div class="code-container mt-3">
-                    <div class="code-header">shell</div>
-                    <pre class="custom-code"><code class="language-shell">
-[~/fhd_deps]$ touch fhd_env.sh
-                    </code></pre>
-                </div>
-
-                <p>In this file, copy-and-paste the same lines:</p>
-
-                <div class="code-container mt-3">
-                    <div class="code-header">bash</div>
-                    <pre class="custom-code"><code class="language-bash">
-module load imagemagick
-module load idl
-source /oscar/runtime/software/external/idl/idl89/bin/idl_setup.bash
-                    </code></pre>
-                </div>
-
-                <p>Now, whenever you need to use <span>FHD</span>, run:
-                </p>
-
-                <div class="code-container mt-3">
-                    <div class="code-header">shell</div>
-                    <pre class="custom-code"><code class="language-shell">
-$ source ~/fhd_deps/fhd_env.sh
-                    </code></pre>
-                </div>
-
-                <p>Note that this is my preferred method because, 
-                    once you start using <span>FHD</span> a little more seriously, 
-                    you will mostly be interacting with Oscar via <span>batch</span>
-                    scripts in order to submit large-memory jobs. You can simply 
-                    add <span>source ~/fhd_deps/fhd_env.sh</span> to any <span>batch</span>
-                    script to configure the job for <span>FHD</span>.</p>
-
-
-            </li>
-          </ol>
-
-
-
-    <h3 id="test-file">Test File</h3>
-
-    <p>To make sure that <span>FHD</span> and all its dependencies 
-        are correctly accessible to IDL, we will first create a test file:</p>
-
-
-
-
-
-
-
 
             <p class="last-edit">Last edit: 2025-02-15</p>
 
@@ -643,7 +402,6 @@ $ source ~/fhd_deps/fhd_env.sh
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/fortran.min.js" integrity="sha512-B8L+Rr5tEGmVUSL3gl6i/mn+MvzxPr6U/ijcTx1tL7zHIxBm8x3XDjLZ7K9/HAEDuq2x/Zwv8dzPXgXy+Fn8Fg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         hljs.highlightAll();

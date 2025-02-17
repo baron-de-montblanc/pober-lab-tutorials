@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSClean Usage</title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            
+            <div class="container mt-5 col-8 col-md-6">
+
+                <h1 class="mb-4">WSClean</h1>
+
+                <h2>Usage</h2>
+
+                <p>Although the 
+                    <a href="https://wsclean.readthedocs.io/en/latest/getting_started.html" target="_blank">documentation</a>
+                    for WSClean is extensive, I find it difficult to parse at times. I will show some examples
+                    of how I would use WSClean, explaining some of its parameters as I go along.
+                </p>
+
+                <h3 id="oscar-wsclean-access">Access Examples on Oscar</h3>
+
+                <p>
+                    For the remainder of this section, I will assume that you have access to the
+                    <span>jpober</span> 
+                    <a href="https://docs.ccv.brown.edu/oscar/submitting-jobs/condo-priority-jobs">condo</a>
+                    on Oscar. If you navigate to the group's <span>data/shared</span> folder, you should find a directory
+                    called <span>Tutorials</span>.
+                </p>
+
+                
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ cd /oscar/data/jpober/shared/Tutorials
+                    </code></pre>
+                </div>
+
+                <p>This is where all the tutorial folders I use as demos are located.
+                    For now, <span>cd</span> into the <span>wsclean</span> folder.
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[Tutorials]$ cd wsclean
+                    </code></pre>
+                </div>
+
+                <p>You should find a directory structure that looks like this:</p>
+
+                <ul class="list-unstyled tree-ul">
+                    <li>wsclean/
+                        <ul class="list-unstyled">
+                            <li>out/</li>
+                            <li>satellite_sample.ms/</li>
+                            <li>plot_wsclean_output.ipynb</li>
+                            <li>wsclean_advanced.sh</li>
+                            <li>wsclean_basic.sh</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p><span>out</span> is where we will send the outputs of WSClean runs.
+                    <span>satellite_sample.ms</span> is the 
+                    sample observation
+                    I prepared for this tutorial. It is composed of 37 frequency channels and 
+                    1 time-step of 
+                    <a href="https://ws.mwatelescope.org/observation/obs/?obs_id=1255099560" target="_blank">this</a>
+                    observation, available on <a href="https://asvo.mwatelescope.org/" target="_blank">MWA ASVO</a>.
+                    As its name suggests, this observation features radio-frequency interference from a satellite,
+                    which we can image using WSClean! <span>plot_wsclean_output.ipynb</span> contains some Python
+                    that will allow you to interpret the various WSClean output files and actually plot some images.
+                    Finally, <span>wsclean_advanced.sh</span> and <span>wsclean_basic.sh</span> contain some bash code 
+                    for an advanced and a basic run of WSClean, respectively. 
+                </p>
+
+                <h3 id="basic-wsclean-run">Basic WSClean run</h3>
+
+                <p>From inside the <span>wsclean</span> tutorial folder, launch the WSClean container:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[wsclean]$ apptainer shell /path/to/containers/wsclean.sif
+                    </code></pre>
+                </div>
+
+                <p>
+                    (Make sure to replace <span>/path/to</span> with the actual path to your 
+                    <span>containers</span> folder.) This should launch the WSClean container
+                    directly in your <span>wsclean</span> folder, which you can verify via <span>pwd</span>:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> pwd
+/oscar/data/jpober/shared/Tutorials/wsclean
+                    </code></pre>
+                </div>
+
+
+                <p>An example for a very basic run of WSClean is shown in <span>wsclean_basic.sh</span>.
+                    If you opened this file, you would find:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+wsclean \
+-name out/satellite_sample_basic \
+-size 2048 2048 \
+-scale 2.25amin \
+satellite_sample.ms
+                    </code></pre>
+                </div>
+
+                <p>This launches WSClean and tells it to prepend all output files with <span>out/satellite_sample_basic</span>. From 
+                    the <span>satellite_sample.ms</span> data, it will
+                    generate a 2048x2048 image at an angular resolution of 2.25 arcminutes.
+                </p>
+
+                <p>You can launch this run as follows:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> bash wsclean_basic.sh
+                    </code></pre>
+                </div>
+
+                <p>Once it's done, your <span>out</span>
+                folder should look like this:
+                </p>
+
+                <ul class="list-unstyled tree-ul">
+                    <li>out/
+                        <ul class="list-unstyled">
+                            <li>satellite_sample_basic-dirty.fits</li>
+                            <li>satellite_sample_basic-image.fits</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p>As you can see, WSClean creates a "dirty" and a "clean" image. 
+                    Note however that in this very basic run, WSClean is <em>not</em> 
+                    actually performing any iterative cleaning. This is enabled via the 
+                    <span>niter</span> flag, which is included in the advanced example below.
+                </p>
+
+                <p><span>fits</span> files are somewhat inconvenient because
+                you cannot simply open it and look at it. To do that, you need 
+                specific software such as <a href="https://sites.google.com/cfa.harvard.edu/saoimageds9/download" target="_blank">DS9</a>. 
+                Instead of using DS9, however, I will show you how to plot these images in Python.
+                The <span>plot_wsclean_output.ipynb</span> Jupyter Notebook file contains the following
+                lines of code:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">python</div>
+                    <pre class="custom-code"><code class="language-python">
+import numpy as np
+import matplotlib.pyplot as plt
+from astropy.io import fits
+from astropy.wcs import WCS
+from astropy.coordinates import SkyCoord
+import pandas as pd
+import astropy.units as u
+plt.style.use("seaborn-v0_8")
+
+file = "./out/satellite_sample_basic-image.fits"
+
+hdul = fits.open(file)
+image = hdul[0].data[0,0]
+wcs = WCS(header=hdul[0].header)
+
+fig, ax = plt.subplots(figsize=(6, 3),
+                 subplot_kw={'projection': wcs, 'slices': ['x', 'y', 0, 0]},
+                 )
+im = ax.imshow(np.abs(image),
+               cmap='inferno',
+               norm='log',
+               vmin=1e-1,
+               aspect='auto',
+              )
+    
+plt.colorbar(im, label="Intensity (Jy/beam)")
+plt.title(f"Imaging WSClean's output",y=1.02)
+plt.xlabel("Right Ascension")
+plt.ylabel("Declination")
+ax.coords.grid(color='white', alpha=0.2, linestyle='solid')
+
+plt.show()
+                    </code></pre>
+                </div>
+
+
+            <p>In short, you open the appropriate <span>fits</span> file using 
+            <a href="https://www.astropy.org/" target="_blank"><span>astropy</span></a>, read in its 
+            World Coordinate System (<span>WCS</span>), and plot the image using 
+            <span>matplotlib</span>. The <span>WCS</span> projection is what lets 
+            <span>matplotlib</span> understand that the coordinate grid is <em>curved</em>.
+            </p>
+
+            <p>This code should produce an image that looks like this:</p>
+
+            <div class="row text-center">
+                <div class="col-12">
+                    <img 
+                        src="../assets/images/wsclean_basic.png"
+                        class="tutorial-image"
+                    />
+                </div>
+            </div>
+
+            <p>You can clearly see a bright spot near the bottom-right corner &mdash; this is 
+                the satellite!
+            </p>
+
+
+            <h3 id="advanced-wsclean-run">Advanced WSClean run</h3>
+
+            <p>Let's now take a look at the <span>wsclean_advanced.sh</span> file:</p>
+
+
+            <div class="code-container mt-2">
+                <div class="code-header">bash</div>
+                <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+wsclean \
+-name out/satellite_sample_advanced \
+-no-update-model-required \
+-parallel-gridding 12 \
+-size 2048 2048 \
+-scale 2.25amin \
+-niter 10000 \
+-mgain 0.6 \
+-super-weight 4 \
+-weight briggs -1.0 \
+-auto-threshold 1 \
+-auto-mask 5 \
+-multiscale \
+-save-source-list \
+-multiscale-scale-bias 0.85 \
+-join-channels -channels-out 2  \
+-fit-spectral-pol 4 \
+satellite_sample.ms
+                </code></pre>
+            </div>
+
+            <p>This is a completely over-the-top run, 
+                but let's take a look at some of the new parameters: </p>
+
+                <ul>
+                    <li>
+                        <span>parallel-gridding</span>: "Tells WSClean to use N threads 
+                        during gridding and degridding." (<a href="https://wsclean.readthedocs.io/en/latest/parallelization.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>no-update-model-required</span>: Does <em>not</em> write model directly to 
+                        the input Measurement Set. (This means you cannot continue a previous run.)
+                    </li>
+                    <li>
+                        <span>niter</span>: "Sets the maximum number of minor cleaning 
+                        iterations that are allowed to be used. Once the specified number 
+                        of iterations are reached, cleaning will stop." (<a href="https://wsclean.readthedocs.io/en/latest/basic_cleaning.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>mgain</span>: "Sets the major iteration gain: during every 
+                        major iteration, the peak is reduced by the given factor. 
+                        With an mgain of 0.8, the peak is reduced by 80%." (<a href="https://wsclean.readthedocs.io/en/latest/basic_cleaning.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>super-weight</span>: "Super weighting refers to performing the counting of 
+                        visibilities on larger grid cells, such that neighbouring uv-samples 
+                        share their weight." (<a href="https://wsclean.readthedocs.io/en/latest/image_weighting.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>weight</span>: Determine the weight to apply to each individual baseline 
+                        when forming the image. Some options include <span>uniform</span>, <span>natural</span>,
+                        or <span>briggs</span>.
+                    </li>
+                    <li>
+                        <span>auto-threshold</span>: "With this option, WSClean will calculate 
+                        the standard deviation of the residual image before the start of 
+                        every major deconvolution iteration, and clean until the given 
+                        auto-threshold factor times the standard deviation of the 
+                        image." (<a href="https://wsclean.readthedocs.io/en/latest/basic_cleaning.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>auto-mask</span>: "Auto-masking allows automated deep cleaning 
+                        and solves the two problems mentioned above:
+
+                        Only one run of wsclean is required;
+                        
+                        It maintains scale-dependent masks, which improves multi-scale 
+                        cleaning." (<a href="https://wsclean.readthedocs.io/en/latest/masking.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>multiscale</span>: "WSClean's multi-scale deconvolution selects the highest 
+                        peak and subtracts it with the best fitting 'scale'"
+                        (<a href="https://wsclean.readthedocs.io/en/latest/multiscale_cleaning.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>save-source-list</span>: Make WSClean return the <span>txt</span> file containing 
+                        the coordinates of all sources it finds during the cleaning process.
+                    </li>
+                    <li>
+                        <span>multiscale-scale-bias</span>: "This parameter balances between how 
+                        sensitive the algorithm is towards large scales compared to smaller scales. 
+                        Lower values will clean larger scales earlier and deeper. 
+                        Its default is 0.6, which means something like 
+                        'if a peak is 0.6 times larger at a 2x larger scale, 
+                        select the larger scale'"
+                        (<a href="https://wsclean.readthedocs.io/en/latest/multiscale_cleaning.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>join-channels channels-out</span>: "The multi-scale algorithm works 
+                        well in combination with the parameters '-join-channels -channels-out'. 
+                        This woul perform peak finding and scale selection on the integrated 
+                        image, and fit the found scale to each output frequency."
+                        (<a href="https://wsclean.readthedocs.io/en/latest/multiscale_cleaning.html" target="_blank">source</a>)
+                    </li>
+                    <li>
+                        <span>fit-spectral-pol</span>: Fits the WSClean generated model to a polynomial
+                        (useful if it known that the sources have smooth behavior).
+                    </li>
+                </ul>
+
+                <p>In practice you never need THAT many WSClean flags. I'm just trying 
+                    to be comprehensive. You can launch that run from inside the <span>wsclean</span>
+                    container via:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> bash wsclean_advanced.sh
+                    </code></pre>
+                </div>
+
+                <p>Your <span>out</span> folder should now contain the following:</p>
+
+
+                <ul class="list-unstyled tree-ul">
+                    <li>out/
+                        <ul class="list-unstyled">
+                            <li>satellite_sample_advanced-0000-dirty.fits</li>
+                            <li>satellite_sample_advanced-0000-image.fits</li>
+                            <li>satellite_sample_advanced-0000-model.fits</li>
+                            <li>satellite_sample_advanced-0000-psf.fits</li>
+                            <li>satellite_sample_advanced-0000-residual.fits</li>
+                            <li>satellite_sample_advanced-0001-dirty.fits</li>
+                            <li>satellite_sample_advanced-0001-image.fits</li>
+                            <li>satellite_sample_advanced-0001-model.fits</li>
+                            <li>satellite_sample_advanced-0001-psf.fits</li>
+                            <li>satellite_sample_advanced-0001-residual.fits</li>
+                            <li>satellite_sample_advanced-MFS-dirty.fits</li>
+                            <li>satellite_sample_advanced-MFS-image.fits</li>
+                            <li>satellite_sample_advanced-MFS-model.fits</li>
+                            <li>satellite_sample_advanced-MFS-psf.fits</li>
+                            <li>satellite_sample_advanced-MFS-residual.fits</li>
+                            <li>satellite_sample_advanced-sources.txt</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p>There are a lot more files now! All the <span>0000</span> and <span>0001</span> 
+                files correspond to the two frequency bands that we told WSClean to image via 
+                <span>-channels-out 2</span>. The <span>MFS</span> files correspond to the synthesized
+                files (combined across frequencies) that we asked for via <span>-join-channels</span>. Finally,
+                the <span>sources</span> file contains the source list we asked for via <span>-save-source-list</span>.
+                </p>
+
+                <p>During its cleaning procedure, WSClean uses the point-spread function (<span>psf</span>) 
+                    to produce a <span>model</span>, which it then compares with the <span>dirty</span> data to generate a
+                    <span>residual</span>. The end-goal product is the clean <span>image</span>.
+                </p>
+
+                <p>Let's take a look at the rest of the <span>plot_wsclean_output.ipynb</span> notebook:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">python</div>
+                    <pre class="custom-code"><code class="language-python">
+file = "./out/satellite_sample_advanced-MFS-image.fits"
+sources = "./out/satellite_sample_advanced-sources.txt"
+
+# Load the component list using pandas
+df = pd.read_csv(sources, delimiter=',', 
+                    index_col=False,
+                    on_bad_lines='skip',
+                )
+
+# Remove unparsable entries
+df = df[~(df == 'd(:d(:d(.\x1c').any(axis=1)]
+
+ra = df[" Ra"].values  # Right Ascension in hh:mm:ss.sss format
+bad_dec = df[" Dec"].values  # Declination in dd.mm.ss.sss format (bad format for astropy)
+
+dec = []
+for i,c in enumerate(bad_dec):
+    dec.append(c.replace(".",":",2))  # Convert declination to the correct dd:mm:ss.sss format
+
+# Convert using SkyCoord
+coord = SkyCoord(ra, dec, unit=(u.hourangle, u.deg))
+
+# Also grab the intensity of each source
+intensity = np.float32(df[" I"].values)
+
+# Load the image fits file and grab its WCS
+hdul = fits.open(file)
+image = hdul[0].data[0,0]
+wcs = WCS(header=hdul[0].header)
+
+# Convert RA/Dec to pixel coordinates
+pix_coords = wcs.wcs_world2pix(np.column_stack(
+    (coord.ra.degree, 
+        coord.dec.degree, 
+        np.zeros(len(coord.ra.degree)), 
+        np.zeros(len(coord.ra.degree)),
+    ),
+), 0)
+
+# Extract pixel coordinates
+ra_pix, dec_pix = pix_coords[:, 0], pix_coords[:, 1]
+
+# Plot the image...
+fig, ax = plt.subplots(figsize=(6, 3), subplot_kw={'projection': wcs, 'slices': ['x', 'y', 0, 0]})
+im = ax.imshow(np.abs(image),
+                cmap='viridis',
+                norm='log',
+                vmin=1e-1,
+                aspect='auto',
+                )
+
+# ... with the sources on top
+ax.scatter(ra_pix, 
+            dec_pix, 
+            s=np.abs(intensity)*4, 
+            color=sns.color_palette()[2],
+            alpha=0.25
+            )
+
+plt.colorbar(im, label="Intensity (Jy/beam)")
+plt.title(f"Imaging WSClean's output (advanced)",y=1.01)
+
+plt.xlabel("Right Ascension")
+plt.ylabel("Declination")
+ax.coords.grid(color='white', alpha=0.2, linestyle='solid')
+
+# Save x and y limits
+xlim = ax.get_xlim()
+ylim = ax.get_ylim()
+
+plt.show()
+                    </code></pre>
+                </div>
+
+
+            <p>
+                Without going into too much detail, this notebook loads the image <span>fits</span> file 
+                and the source list, converts the source list Ra/Dec coordinates into pixel 
+                coordinates, and plots the sources on top of the image. If you run this, you should 
+                get something like this:
+            </p>
+
+
+            <div class="row text-center">
+                <div class="col-12">
+                    <img 
+                        src="../assets/images/wsclean_advanced.png"
+                        class="tutorial-image"
+                    />
+                </div>
+            </div>
+
+            <p>Immediately, we see that the image is a lot "smoother" than the one made 
+                from the basic run. The sources (plotted in red) also seem to line up pretty 
+                well with where we know the satellite to be.
+            </p>
+
+            <p>This concludes my WSClean tutorial. Hope this was helpful!</p>
+
+
+                
+            <p class="last-edit">Last edit: 2025-02-16</p>
+
+            </div>
+            
+            <div class="d-none d-md-block col-md-3">
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js" integrity="sha512-/uCTceIDOniHf+VUKbCnP/x6GQSRrm4GwUtQYMgKa9yIZPGzlR04flSsD+2or7bPn44VY9inIHI4cwNCcZmJDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="../assets/js/load-templates.js"></script>
+<script src="../assets/js/copy-code.js"></script>
+<script src="../assets/js/page-navigation-buttons.js"></script>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSClean</title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            
+            <div class="container mt-5 col-8 col-md-6">
+
+                <h1 class="mb-4">WSClean</h1>
+
+                <p><a href="https://wsclean.readthedocs.io/en/latest/" target="_blank">WSClean</a>
+                    is a popular imaging software for interferometric data. It operates on 
+                    files written in the 
+                    <a href="https://casaguides.nrao.edu/index.php/Measurement_Set_Contents" target="_blank">CASA Measurement Set</a>
+                    format (<span>.ms</span>) to produce 
+                    <a href="https://docs.astropy.org/en/latest/io/fits/index.html" target="_blank">FITS</a> files containing images
+                    and relevant metadata for the observation.
+            
+                </p>
+
+                <h2>Insallation on Oscar</h2>
+
+                <p>In the Pober lab, we use WSClean quite often, so I am preparing this tutorial
+                    so you do not have to struggle with its installation like I did.
+                    <strong>WARNING:</strong> Don't even bother trying to install it using the 
+                    <a href="https://wsclean.readthedocs.io/en/latest/installation.html" target="_blank">official WSClean instructions</a>.
+                    CCV has some security protocols in place that will block a direct install (as of Feb 2025).
+                </p>
+
+                <p>This being said, installing
+                    through the official instructions should work fine on your laptop/personal computer. 
+                    If you only need WSClean for small-scale processing that your own computer
+                    can handle, go ahead and install it that way!
+                </p>
+
+                <p>For Oscar however, we will be using 
+                    <a href="https://docs.ccv.brown.edu/oscar/singularity-containers/untitled" target="_blank">Apptainer</a> in order
+                    to download and run container images. A container is a small, self-contained package that includes everything 
+                    needed to run a program, making sure it works the same no matter where 
+                    it runs. Containers help keep software consistent across different 
+                    computers by isolating it from the system.
+                    (If you're wondering why we don't use Docker instead, it's because CCV doesn't allow Docker
+                    for security reasons. Luckily, Apptainer can run Docker images.)
+                </p>
+
+                <p>Since there are a lot of software in the Pober lab that we run via container images, I would recommend
+                    creating a dedicated folder to store them in; for example, <span>containers</span>.
+                    Navigate to this folder and pull the latest WSClean image as follows:
+                </p>
+                
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer pull wsclean.sif docker://alecthomson/wsclean
+                    </code></pre>
+                </div>
+
+                <p>
+                    (<span>apptainer</span> is loaded by default so there is no need to import any modules.)
+                     This downloads a <span>wsclean.sif</span> file in your <span>containers</span>
+                    folder.
+                </p>
+
+                <p>In order to ensure that the isolated container has access to your data files on Oscar,
+                    run the following:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ export APPTAINER_BINDPATH="/oscar/home/$USER,/oscar/scratch/$USER,/oscar/data/"
+                    </code></pre>
+                </div>
+
+                <p>Finally, in order to run WSClean, launch the container as follows:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer shell wsclean.sif
+                    </code></pre>
+                </div>
+
+                <p>This will put you in a completely isolated environment with all dependencies 
+                    and requirements set up specifically for WSClean. To make sure that WSClean
+                    works, you can run the following:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">apptainer shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> wsclean --version
+
+WSClean version 3.5 (2024-07-30)
+Git commit hash: v3.5
+This software package is released under the GPL version 3.
+Author: André Offringa (offringa@gmail.com).
+EveryBeam is available.
+IDG is available.
+WGridder is available.
+                    </code></pre>
+                </div>
+
+            <p class="last-edit">Last edit: 2025-02-16</p>
+
+            </div>
+            
+            <div class="d-none d-md-block col-md-3">
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="../assets/js/load-templates.js"></script>
+<script src="../assets/js/copy-code.js"></script>
+<script src="../assets/js/page-navigation-buttons.js"></script>
