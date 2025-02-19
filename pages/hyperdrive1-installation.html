@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WSClean</title>
+    <title>MWA Hyperdrive Installation</title>
 
     <script>
         if (window.location.hostname === "baron-de-montblanc.github.io") {
@@ -12,7 +12,7 @@
             document.write('<base href="/">');
         }
     </script>
-    
+
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -33,59 +33,69 @@
 
             <div class="container mt-2 col-12 col-lg-6">
 
-                <h1 class="mb-4">WSClean</h1>
+                <h1 class="mb-4">MWA Hyperdrive</h1>
 
-                <p><a href="https://wsclean.readthedocs.io/en/latest/" target="_blank">WSClean</a>
-                    is a popular imaging software for interferometric data. It operates on 
-                    files written in the 
-                    <a href="https://casaguides.nrao.edu/index.php/Measurement_Set_Contents" target="_blank">CASA Measurement Set</a>
-                    format (<span>.ms</span>) to produce 
-                    <a href="https://docs.astropy.org/en/latest/io/fits/index.html" target="_blank">FITS</a> files containing images
-                    and relevant metadata for the observation.
-            
+                <p>
+                    <a href="https://github.com/MWATelescope/mwa_hyperdrive" target="_blank">Hyperdrive</a>
+                    is a calibration software for the MWA telescope. It actually has a very nice 
+                    <a href="https://mwatelescope.github.io/mwa_hyperdrive/installation/intro.html" target="_blank">user manual</a> 
+                    that I would definitely recommend consulting. However, getting started is always daunting, 
+                    so here is a short guide on how to get Hyperdrive running on Oscar.
                 </p>
 
-                <h2>Insallation on Oscar</h2>
+                <h2 id="hyperdrive-installation">Installation</h2>
 
-                <p>In the Pober lab, we use WSClean quite often, so I am preparing this tutorial
-                    so you do not have to struggle with its installation like I did.
-                    <strong>WARNING:</strong> Don't even bother trying to install it using the 
-                    <a href="https://wsclean.readthedocs.io/en/latest/installation.html" target="_blank">official WSClean instructions</a>.
-                    CCV has some security protocols in place that will block a direct install (as of Feb 2025).
+                <p>
+                    Although the Hyperdrive user manual offers quite a few options for installation, 
+                    none of these are going to work on Oscar. CCV has some security protocols in place 
+                    that make directly installing software a real nightmare.
                 </p>
 
-                <p>This being said, installing
-                    through the official instructions should work fine on your laptop/personal computer. 
-                    If you only need WSClean for small-scale processing that your own computer
-                    can handle, go ahead and install it that way!
+                <p>
+                    Instead, we will be installing it via
+                     <a href="https://docs.ccv.brown.edu/oscar/singularity-containers/untitled" target="_blank">Apptainer</a>. 
+                     Apptainer is a software that comes pre-installed on Oscar (no need to load any modules!). 
+                     Its purpose is to facilitate the building and running of container images.
                 </p>
 
-                <p>For Oscar however, we will be using 
-                    <a href="https://docs.ccv.brown.edu/oscar/singularity-containers/untitled" target="_blank">Apptainer</a> in order
-                    to download and run container images. A container is a small, self-contained package that includes everything 
+                <p>A container is a small, self-contained package that includes everything 
                     needed to run a program, making sure it works the same no matter where 
                     it runs. Containers help keep software consistent across different 
                     computers by isolating it from the system.
                     (If you're wondering why we don't use Docker instead, it's because CCV doesn't allow Docker
-                    for security reasons. Luckily, Apptainer can run Docker images.)
-                </p>
+                    for security reasons. Luckily, Apptainer can run Docker images.)</p>
 
-                <p>Since there are a lot of software in the Pober lab that we run via container images, I would recommend
-                    creating a dedicated folder to store them in; for example, <span>containers</span>.
-                    Navigate to this folder and pull the latest WSClean image as follows:
+                <p>
+                    Since we are constantly using containers in the Pober lab, I would recommend giving them their 
+                    own dedicated folder somewhere in the <span>jpober</span> condo (since these images can 
+                    be quite large).
                 </p>
                 
                 <div class="code-container mt-2">
                     <div class="code-header">shell</div>
                     <pre class="custom-code"><code class="language-shell">
-[containers]$ apptainer pull wsclean.sif docker://alecthomson/wsclean
+$ mkdir containers
                     </code></pre>
                 </div>
 
                 <p>
-                    (<span>apptainer</span> is loaded by default so there is no need to import any modules.)
-                     This downloads a <span>wsclean.sif</span> file in your <span>containers</span>
-                    folder.
+                    From inside the <span>containers</span> folder, download the Hyperdrive image via:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer pull hyperdrive.sif docker://d3vnull0/mwa_hyperdrive:peel-cuda11.4.3-cc70-x86-64-v2
+                    </code></pre>
+                </div>
+
+                <p>
+                    This will pull the specific <span>peel-cuda11.4.3-cc70-x86-64-v2</span> version of Hyperdrive. If 
+                    you check out the <a href="https://hub.docker.com/r/d3vnull0/mwa_hyperdrive" target="_blank">MWA Hyperdrive Docker Hub</a>, 
+                    you will notice an overwhelming number of different Hyperdrive versions. While I'm not sure of the 
+                    specifics for each version, I would recommend making sure that you download a version that has 
+                    <span>cuda</span> in it to make sure that GPU acceleration will be enabled. Calibration on CPUs vs. 
+                    GPUs is orders of magnitude slower.
                 </p>
 
                 <p>In order to ensure that the isolated container has access to your data files on Oscar,
@@ -137,39 +147,45 @@ export APPTAINER_BINDPATH="/oscar/home/$USER,/oscar/scratch/$USER,/oscar/data/"
                 </div>
                 
                 <p>With this, Apptainer will always be able to access your Oscar files. 
-                    Finally, in order to run WSClean, launch the container as follows:</p>
+                    Finally, in order to run Hyperdrive, launch the container as follows:</p>
 
                 <div class="code-container mt-2">
                     <div class="code-header">shell</div>
                     <pre class="custom-code"><code class="language-shell">
-[containers]$ apptainer shell wsclean.sif
+[containers]$ apptainer shell hyperdrive.sif
                     </code></pre>
                 </div>
 
                 <p>This will put you in a completely isolated environment with all dependencies 
-                    and requirements set up specifically for WSClean. To make sure that WSClean
+                    and requirements set up specifically for Hyperdrive. To make sure that Hyperdrive
                     works, you can run the following:
                 </p>
 
                 <div class="code-container mt-2">
                     <div class="code-header">apptainer shell</div>
                     <pre class="custom-code"><code class="language-shell">
-Apptainer> wsclean --version
-
-WSClean version 3.5 (2024-07-30)
-Git commit hash: v3.5
-This software package is released under the GPL version 3.
-Author: André Offringa (offringa@gmail.com).
-EveryBeam is available.
-IDG is available.
-WGridder is available.
+Apptainer> hyperdrive --version
+mwa_hyperdrive 0.2.1
                     </code></pre>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <p class="last-edit">Last edit: 2025-02-16</p>
-                    <p class="last-edit">Author: Jade Ducharme</p>
-                </div>
+                <p>
+                    <strong>NOTE:</strong> Launching Hyperdrive this way only sets it up to 
+                    run calibration on regular old CPUs. To learn how to enable GPU acceleration, 
+                    move on to the next section!
+                </p>
+
+
+
+
+
+
+
+
+            <div class="d-flex justify-content-between">
+                <p class="last-edit">Last edit: 2025-02-19</p>
+                <p class="last-edit">Author: Jade Ducharme</p>
+            </div>
 
             </div>
             
@@ -189,6 +205,7 @@ WGridder is available.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js" integrity="sha512-/uCTceIDOniHf+VUKbCnP/x6GQSRrm4GwUtQYMgKa9yIZPGzlR04flSsD+2or7bPn44VY9inIHI4cwNCcZmJDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         hljs.highlightAll();

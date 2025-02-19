@@ -24,6 +24,8 @@ function addNavigationButtons(footer) {
         `${basePath}/pages/page3-dep-link-test.html`,
         `${basePath}/pages/page4-summary.html`,
         `${basePath}/pages/page5-examples.html`,
+        `${basePath}/pages/hyperdrive1-installation.html`,
+        `${basePath}/pages/hyperdrive2-gpu-acceleration.html`,
         `${basePath}/pages/wsclean1-oscar.html`,
         `${basePath}/pages/wsclean2-usage.html`,
     ];
