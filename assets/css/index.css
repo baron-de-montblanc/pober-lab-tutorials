@@ -1,8 +1,8 @@
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
     html {
-        font-size: 125%; /* Increase font size by 25% on xl and larger screens */
+        font-size: 125%;
     }
-}
+} */
 
 html {
     scroll-behavior: smooth;
