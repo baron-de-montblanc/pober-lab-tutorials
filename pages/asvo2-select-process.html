@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecting and Processing Data</title>
+
+    <script>
+        if (window.location.hostname === "baron-de-montblanc.github.io") {
+            document.write('<base href="/pober-lab-tutorials/">');
+        } else {
+            document.write('<base href="/">');
+        }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            
+            <div class="container mt-5 col-8 col-md-6">
+
+                <h1 class="mb-4">Downloading MWA Data from ASVO</h1>
+
+                <h2 class="mb-4">Selecting and Processing Data</h2>
+
+                <p class="mb-4">
+                    Clicking on the "OBSERVATIONS" button at the top of the screen takes you to 
+                    the <a href="https://asvo.mwatelescope.org/observations" target="_blank">observations</a> 
+                    page which lists every single available MWA observation:
+                </p>
+
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img 
+                            src="assets/images/asvo-obs.png"
+                            alt="ASVO Observations Page"
+                            class="w-75"
+                        />
+                    </div>
+                </div>
+
+                <p class="my-4">On the left, there are a bunch of filters allowing you to select observations 
+                    based on the date, the observation ID (OBSID), the pointing, and several other 
+                    options. Additionally, clicking on the little "i" icon next to any OBSID takes you to 
+                    a separate page containing all the relevant information pertaining to that observation
+                    (<a href="http://ws.mwatelescope.org/observation/obs/?obs_id=1423972816" target="_blank">for example</a>):
+                </p>
+
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img 
+                            src="assets/images/asvo-obs-details.png"
+                            alt="ASVO Observation Details Page"
+                            class="w-75"
+                        />
+                    </div>
+                </div>
+
+                <p class="my-4">Once you have found the observation you would like to download, simply click 
+                    on its OBSID. This should take you to the job page:
+                </p>
+
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img 
+                            src="assets/images/asvo-job.png"
+                            alt="ASVO Job Page"
+                            class="w-75"
+                        />
+                    </div>
+                </div>
+
+                <p class="mt-4">In almost all cases, "Visibility Conversion Job" is what you want. 
+                    This job type converts the data from the raw MWA correlator format to 
+                    either the CASA Measurement Set or to UVFITS format. You have options to set the 
+                    time resolution, frequency resolution, apply calibration, etc. Not setting anything 
+                    defaults to the true observational parameters.
+                </p>
+
+                <p class="mb-4">Once you are satisfied with the parameters 
+                    you selected, hit "Submit". To view the status of your job, click the big 
+                    "MY JOBS" button at the top of the screen.
+                </p>
+
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img 
+                            src="assets/images/asvo-job-status.png"
+                            alt="ASVO Job Status Page"
+                            class="w-100"
+                        />
+                    </div>
+                </div>
+
+                <p class="my-4">
+                    It may take a bit of time to go through the queue. After "Queued", your job should 
+                    say "Processing". Once it's done processing, it'll say "Completed" and a green download 
+                    button will appear:
+                </p>
+
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img 
+                            src="assets/images/asvo-job-completed.png"
+                            alt="ASVO Completed Job Example"
+                            class="w-100"
+                        />
+                    </div>
+                </div>
+
+                <p class="my-4">Cliking on this download button will initiate the download to your 
+                    <em>own</em> computer, which you don't generally want to do. To download 
+                    it directly to Oscar, you will need to use the MWA ASVO client <span>giant-squid</span>. 
+                    Move on to the next section for instructions on how to install and use this client!
+                </p>
+
+            <p class="last-edit">Last edit: 2025-02-19</p>
+
+            </div>
+            
+            <div class="d-none d-md-block col-md-3">
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js" integrity="sha512-/uCTceIDOniHf+VUKbCnP/x6GQSRrm4GwUtQYMgKa9yIZPGzlR04flSsD+2or7bPn44VY9inIHI4cwNCcZmJDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="assets/js/load-templates.js"></script>
+<script src="assets/js/copy-code.js"></script>
+<script src="assets/js/page-navigation-buttons.js"></script>
