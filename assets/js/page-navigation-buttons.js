@@ -16,6 +16,9 @@ function addNavigationButtons(footer) {
     // Define ordered list of pages
     const pageList = [
         `${basePath}/index.html`,
+        `${basePath}/pages/asvo1-create-account.html`,
+        `${basePath}/pages/asvo2-select-process.html`,
+        `${basePath}/pages/asvo3-giant-squid.html`,
         `${basePath}/pages/page1-idl-setup.html`,
         `${basePath}/pages/page2-fhd-deps.html`,
         `${basePath}/pages/page3-dep-link-test.html`,

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>giant-squid</title>
+
+    <script>
+        if (window.location.hostname === "baron-de-montblanc.github.io") {
+            document.write('<base href="/pober-lab-tutorials/">');
+        } else {
+            document.write('<base href="/">');
+        }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            
+            <div class="container mt-5 col-8 col-md-6">
+
+                <h1 class="mb-4">Downloading MWA Data from ASVO</h1>
+
+                <h2>MWA giant-squid</h2>
+
+                <p>
+                    <a href="https://github.com/MWATelescope/giant-squid" target="_blank"><span>giant-squid</span></a> is a  
+                    command-line interface client designed to assist the user in submitting and downloading jobs on 
+                    ASVO.
+                </p>
+
+                <h3>Installation</h3>
+
+                <p>Following their 
+                    <a href="https://github.com/MWATelescope/giant-squid" target="_blank">installation instructions</a>,
+                    first open up an Oscar session and load the <span>rust</span> module:
+                </p>
+                
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ module load rust
+                    </code></pre>
+                </div>
+
+                <p><span>giant-squid</span> is then easily installed via:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ cargo install mwa_giant_squid
+                    </code></pre>
+                </div>
+
+                <p>
+                    To verify the installation:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ giant-squid
+mwa_giant_squid
+Christopher H. Jordan &lt;christopherjordan87@gmail.com&gt;, Harrison Barlow
+&lt;harrison.barlow@curtin.edu.au&gt;, Dev Null &lt;dev.null@curtin.edu.au&gt;
+An alternative, efficient and easy-to-use MWA ASVO client.
+Source:   https://github.com/MWATelescope/giant-squid
+MWA ASVO: https://asvo.mwatelescope.org
+
+USAGE:
+    giant-squid <SUBCOMMAND>
+
+OPTIONS:
+    -h, --help    Print help information
+
+SUBCOMMANDS:
+    list           List ASVO jobs
+    download       Download an ASVO job
+    submit-vis     Submit ASVO jobs to download MWA raw visibilities
+    submit-conv    Submit ASVO conversion jobs
+    submit-meta    Submit ASVO jobs to download MWA metadata (metafits and cotter flags)
+    wait           Wait for ASVO jobs to complete, return the urls
+    help           Print this message or the help of the given subcommand(s)
+                    </code></pre>
+                </div>
+
+                <p>
+                    But first, before you are ready to use <span>giant-squid</span>, you need to export 
+                    your MWA API key. This API key uniquely identifies you in the MWA database and it is what
+                    will allow <span>giant-squid</span> to know that <em>you</em> are making the requests.
+                </p>
+
+                <p>To find your API key, go back to the ASVO website, log in, and click on 
+                    "MY PROFILE" to go to the 
+                     <a href="https://asvo.mwatelescope.org/profile" target="_blank">profile page</a>.
+                     Find the  "API Key (for use with the Python API / command line client)" and copy it.
+                </p>
+
+                <p>Next, go back to Oscar and open up your <span>~/.bashrc</span> file via:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ nano ~/.bashrc
+                    </code></pre>
+                </div>
+
+                <p>
+                    The <span>.bashrc</span> file is loaded every single time you open a new terminal. It 
+                    contains all the variables and executables that we wish to have
+                    persist across sessions. We will be pasting the API key there so that it is 
+                    immediately accessible to <span>giant-squid</span> whenever you open a new 
+                    Oscar session. Scroll to the bottom of your <span>.bashrc</span> file and add 
+                    the following:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+export MWA_ASVO_API_KEY = "&lt;your-mwa-asvo-key&gt;"
+                    </code></pre>
+                </div>
+
+                <p>
+                    Making sure to replace <span>&lt;your-mwa-asvo-key&gt;</span> with the key you 
+                    just copied. <strong>NOTE:</strong> Don't forget the quotation marks around 
+                    your API key!
+                </p>
+
+                <p>To execute the changes, run:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ source ~/.bashrc
+                    </code></pre>
+                </div>
+
+                <h3>Usage</h3>
+
+                <p>
+                    Now that <span>giant-squid</span> is up and running and connected to your account 
+                    via the API key, here are some basic usage instructions. First, to list all your 
+                    active jobs:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ giant-squid list
++--------+------------+------------+-----------+-----------+
+| Job ID | Obsid      | Job Type   | Job State | File Size |
++--------+------------+------------+-----------+-----------+
+| 839506 | 1061315448 | Conversion | Ready     | 7.9 GiB   |
+| 842028 | 1423972816 | Conversion | Cancelled |           |
++--------+------------+------------+-----------+-----------+
+                    </code></pre>
+                </div>
+
+                <p>If the Job State is "Ready", you can download it via: </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ giant-squid download --download-dir /download/dir/ &lt;jobID&gt;
+                    </code></pre>
+                </div>
+
+                <p>Replacing <span>/download/dir/</span> with the 
+                directory you want the data downloaded to, and <span>&lt;jobID&gt;</span> 
+                with the appropriate Job ID (or, alternatively, you can also download by specifying the 
+                OBSID).
+                </p>
+
+                <p><strong>NOTE:</strong> 
+                During a download, <span>giant-squid</span> has to send gigabytes of data from Australia all 
+                the way to Brown. Unfortunately, it is only too common for something to go wrong at some point
+                during this transfer and for the download to suddenly crash. To avoid wasting precious time 
+                re-starting and re-starting your <span>giant-squid</span> jobs, include the <span>--keep-tar</span> 
+                flag:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ giant-squid download --download-dir /download/dir/ --keep-tar &lt;jobID&gt;
+                    </code></pre>
+                </div>
+
+                <p>
+                    Instead of stream-untarring your data in the desired <span>.ms</span> or 
+                    <span>.uvfits</span> format, it will instead download the compressed <span>.tar</span> 
+                    file (which you will then have to untar yourself). The advantage of this is that by 
+                    downloading the <span>.tar</span> file directly, <span>giant-squid</span> is able to 
+                    resume partial downloads. You can then set a job running, forget about it for a few hours, 
+                    and even if it crashes a few times, <span>giant-squid</span> will keep resuming automatically 
+                    until the download completes.
+                </p>
+
+                <p>This completes my how to download MWA data on Oscar tutorial!</p>
+
+
+
+
+            <p class="last-edit">Last edit: 2025-02-19</p>
+
+            </div>
+            
+            <div class="d-none d-md-block col-md-3">
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js" integrity="sha512-/uCTceIDOniHf+VUKbCnP/x6GQSRrm4GwUtQYMgKa9yIZPGzlR04flSsD+2or7bPn44VY9inIHI4cwNCcZmJDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="assets/js/load-templates.js"></script>
+<script src="assets/js/copy-code.js"></script>
+<script src="assets/js/page-navigation-buttons.js"></script>
