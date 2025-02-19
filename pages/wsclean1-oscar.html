@@ -98,7 +98,44 @@ $ export APPTAINER_BINDPATH="/oscar/home/$USER,/oscar/scratch/$USER,/oscar/data/
                     </code></pre>
                 </div>
 
-                <p>Finally, in order to run WSClean, launch the container as follows:</p>
+                <p>Note that this command is only valid for the <em>current</em> shell.
+                    If you quit and reopen a new terminal, the <span>APPTAINER_BINDPATH</span> variable
+                    resets since <span>export</span> does not persist across sessions.
+                </p>
+
+                <p>
+                    To make sure that Apptainer always has access to your Oscar files, you need
+                    to move that <span>export</span> statement inside your <span>~/.bashrc</span> 
+                    file. The <span>.bashrc</span> is automatically loaded when you open a 
+                    new terminal, so anything defined there persists across sessions.
+                </p>
+
+                <p>
+                    Open up your <span>.bashrc</span> file using your favorite text editor; e.g.
+                </p>
+
+                
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ nano ~/.bashrc
+                    </code></pre>
+                </div>
+                
+                <p>
+                    Scroll to the bottom and copy-paste the <span>export</span> statement:
+                </p>
+                
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+# Set apptainer path
+export APPTAINER_BINDPATH="/oscar/home/$USER,/oscar/scratch/$USER,/oscar/data/"
+                    </code></pre>
+                </div>
+                
+                <p>With this, Apptainer will always be able to access your Oscar files. 
+                    Finally, in order to run WSClean, launch the container as follows:</p>
 
                 <div class="code-container mt-2">
                     <div class="code-header">shell</div>
