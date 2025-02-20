@@ -24,6 +24,17 @@ a div.fa {
 }
 
 
+.custom-header-nav {
+    margin-bottom: 0;
+}
+
+@media (min-width: 992px) {
+    .custom-header-nav {
+        margin-bottom: 1em;
+    }
+}
+
+
 .custom-vertical-nav {
     position: sticky;
     top:0px;

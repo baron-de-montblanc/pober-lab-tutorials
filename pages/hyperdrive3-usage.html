@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWA Hyperdrive Usage</title>
+
+    <script>
+        if (window.location.hostname === "baron-de-montblanc.github.io") {
+            document.write('<base href="/pober-lab-tutorials/">');
+        } else {
+            document.write('<base href="/">');
+        }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-12 col-lg-3 mb-0">
+                <div class="custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            </div>
+
+            <div class="container mt-2 col-12 col-lg-6">
+
+                <h1 class="mb-4">MWA Hyperdrive</h1>
+
+                <h2>Usage</h2>
+
+                <p>
+                    After installing Hyperdrive, there are still a few things 
+                    left to do before it is fully operational.
+                </p>
+
+                <h3 id="hyperdrive-required-files">Required static files</h3>
+
+                <p>
+                    First, as this is MWA-specific software, we will need to download some 
+                    MWA-specific files that Hyperdrive needs access to. The first of these is the 
+                    MWA beam file. You can download this in any directory, but I recommend setting up 
+                    a directory especially for all your Hyperdrive-related stuff:
+                </p>
+                
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[~]$ mkdir hyperdrive
+[~]$ cd hyperdrive
+                    </code></pre>
+                </div>
+
+
+                <p>
+                    From there, download the MWA beam file via:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[hyperdrive]$ wget http://ws.mwatelescope.org/static/mwa_full_embedded_element_pattern.h5
+                    </code></pre>
+                </div>
+
+                <p>
+                    To make sure Hyperdrive can find this file, you will need to set the 
+                    <span>MWA_BEAM_FILE</span> environment variable in your <span>~/.bashrc</span> 
+                    file. This is because anything defined in the <span>~/.bashrc</span> 
+                    file persists across sessions, meaning you won't constantly have to redefine 
+                    the <span>MWA_BEAM_FILE</span> variable. Open up your <span>.bashrc</span> file:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ nano ~/.bashrc
+                    </code></pre>
+                </div>
+
+                Scroll to the bottom and add the following:
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+# Set up MWA beam environment variable
+export MWA_BEAM_FILE=/ABSOLUTE/PATH/TO/hyperdrive/mwa_full_embedded_element_pattern.h5
+                    </code></pre>
+                </div>
+
+                <p>
+                    Make sure to replace <span>/ABSOLUTE/PATH/TO</span> with the 
+                    <em>absolute</em> path to your <span>hyperdrive</span> folder.
+                     If you're not sure what that is, <span>cd</span> into your <span>hyperdrive</span> 
+                    folder and type <span>pwd</span> (which stands for print working directory).
+                </p>
+
+
+                <p>
+                    Next, you also need to download a source list. Hyperdrive prepares calibration 
+                    solutions by comparing the input visibilities to this model source list. A 
+                    comprehensive set of appropriate source lists for use with the MWA can be found 
+                    <a href="https://github.com/JLBLine/srclists" target="_blank">here</a>. Make sure to 
+                    download the latest one. For example:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[hyperdrive]$ wget https://github.com/JLBLine/srclists/blob/master/srclist_pumav3_EoR0LoBES_EoR1pietro_CenA-GP_2023-11-07.fits
+                    </code></pre>
+                </div>
+
+                <p>
+                    Once again, to make sure Hyperdrive finds this source list, you will want to 
+                    define it in your <span>.bashrc</span>. This time, however, Hyperdrive doesn't 
+                    actually define a default variable name, so call it whatever you want; for example:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+# Set up MWA source list location
+export MWA_SOURCE_LIST=/ABSOLUTE/PATH/TO/hyperdrive/srclist_pumav3_EoR0LoBES_EoR1pietro_CenA-GP_2023-11-07.fits
+                    </code></pre>
+                </div>
+
+                <p>With this, you are ready to get calibrating! A typical Hyperdrive 
+                    use case works in two steps. The first step is calibration via the <span>di-calibrate</span> 
+                    flag. This step can take several hours, depending on the number of sources used for the calibration 
+                    and on the size of the observation itself. It produces a <span>fits</span> file containing the 
+                    calibration solutions. Once those have been obtained, you need to apply them to the data via the 
+                    <span>solutions-apply</span> flag. This typically only takes a few minutes. The output 
+                    is the desired calibrated data!
+                </p> 
+
+                <h3 id="hyperdrive-calibrate">Calibrate</h3>
+
+                <p>
+                    I find that the best way to interact with command-line software like Hyperdrive 
+                    is to create a bash script containing all the commands I want to pass to it. 
+                    For a simple calibration job, you can create a bash script via:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ touch hyperdrive_calibrate.sh
+                    </code></pre>
+                </div>
+
+                <p>
+                    Open up this file:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ nano hyperdrive_calibrate.sh
+                    </code></pre>
+                </div>
+
+                <p>
+                    Include all your commands here. For example, a very beefy calibration 
+                    job might look like this:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+hyperdrive di-calibrate \
+    -d 1066742016.ms 1066742016.metafits \
+    -s "$MWA_SOURCE_LIST" \
+    -n 9000 \
+    --source-dist-cutoff 120 \
+    --max-iterations 200 \
+    --stop-thresh 1e-20 \
+    -o calibration_solutions.fits
+                    </code></pre>
+                </div>
+
+                <p>
+                    This runs a calibration job on the MWA observation with OBSID 1066742016 (assuming 
+                    that you have this observation downloaded already!) using the source list defined 
+                    through the <span>MWA_SOURCE_LIST</span> environment variable. The 
+                    <span>-n</span> flags tells Hyperdrive to include the 9000 brightest 
+                    sources for making the model visibilities. The 
+                    <span>--source-dist-cutoff</span> tells Hyperdrive to only consider sources 
+                    within 120 degrees of the phase center of the observation. The 
+                    <span>--max-iterations</span> flag tells it to go through a maximum of 200 
+                    iterations before terminating. Finally, the <span>--stop-thresh</span> quantifies
+                    how close the model and the data should be in order for the solution to be considered 
+                    acceptable. It produces the calibration solutions in the specified output 
+                    file, <span>calibration_solutions.fits</span>. Note that Hypderdrive 
+                    <em>absolutely</em> requires the <span>metafits</span> file that comes 
+                    with every MWA observation.
+                </p>
+
+                <p>
+                    To launch this script, first launch the Hyperdrive container:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer shell --nv hyperdrive.sif
+                    </code></pre>
+                </div>
+
+                <p>(Don't forget the <span>--nv</span> flag which enables GPU 
+                acceleration.) Next, from inside the container, simply run:</p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> bash /path/to/hyperdrive_calibration.sh
+                    </code></pre>
+                </div>
+
+
+                <h3 id="hyperdrive-apply-solns">Inspecting and applying the calibration solutions</h3>
+
+
+                <p>
+                    Once the calibration job is done, you can create another bash script 
+                    for applying them; say <span>hypderdrive_apply.sh</span>. Open that up 
+                    and define a basic calibration application job as follows:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+hyperdrive solutions-apply \
+    -d 1066742016.ms 1066742016.metafits \
+    -s calibration_solutions.fits \
+    -o calibrated.ms
+                    </code></pre>
+                </div>
+
+                <p>
+                    Before running that, though, we might want to check that our calibration 
+                    solutions look reasonable. We can do that by running the <span>solutions-plot</span> 
+                    script:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> hyperdrive solutions-plot calibration_solutions.fits
+                    </code></pre>
+                </div>
+
+
+
+
+
+
+
+                <div class="d-flex justify-content-between">
+                    <p class="last-edit">Last edit: 2025-02-19</p>
+                    <p class="last-edit">Author: Jade Ducharme</p>
+                </div>
+
+            </div>
+            
+            <div class="d-none d-lg-block col-lg-3"></div>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js" integrity="sha512-/uCTceIDOniHf+VUKbCnP/x6GQSRrm4GwUtQYMgKa9yIZPGzlR04flSsD+2or7bPn44VY9inIHI4cwNCcZmJDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="assets/js/load-templates.js"></script>
+<script src="assets/js/copy-code.js"></script>
+<script src="assets/js/page-navigation-buttons.js"></script>

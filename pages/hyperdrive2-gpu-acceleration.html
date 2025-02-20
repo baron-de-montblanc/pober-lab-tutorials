@@ -38,19 +38,101 @@
                 <h2>GPU Acceleration</h2>
 
                 <p>
-                    
+                    If you downloaded a Hyperdrive image containing the word <span>cuda</span>, 
+                    then GPU acceleration should be possible. To enable it on Oscar, you need to make 
+                    sure to open a session on the <span>gpu</span> partition (as opposed to the 
+                    default <span>batch</span> partition). I like to use the 
+                    <a href="https://ood.ccv.brown.edu/pun/sys/dashboard/" target="_blank">OpenOnDemand</a> (OOD)
+                    portal, but you can do it with a regular batch script or within an interactive session as 
+                    well.
                 </p>
 
+                <p>
+                    If using OOD, select the "Desktop (Advanced)" under "Expert GUIs" and make sure that 
+                    the <span>gpu</span> partition is selected. Select the amount of time you need (typically at 
+                    least one or two hours for an MWA calibration job) and the memory (be generous here, I 
+                    usually just go for the maximum allowed 192Gb). For the number of GPUs, you should only select 
+                    one. To my knowledge, Hyperdrive doesn't parallelize across GPUs.
+                </p>
 
+                <p>
+                    Once your session is up and running, verify that the GPUs are connected via:
+                </p>
 
-
-                
+ 
                 <div class="code-container mt-2">
                     <div class="code-header">shell</div>
                     <pre class="custom-code"><code class="language-shell">
-[~]$ sample-code
+$ nvidia-smi
                     </code></pre>
                 </div>
+
+                <p>
+                    If GPUs are <em>not</em> connected, you will get an error:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+bash: nvidia-smi: command not found...
+                    </code></pre>
+                </div>
+
+                <p>
+                    If everything is correctly set up, you will instead see some information 
+                    about your device:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Wed Feb 19 18:53:51 2025
++-------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.129.03              Driver Version: 535.129.03    CUDA Version: 12.2 |
+|-------------------------------------------------------------------------------------|
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC         |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M.         |
+|                               |                      |          MIG M.              |
+|===  ===================  ============  ============  ============  =================|
+|  0  Quadro RTX 6000      On           | 00000000:60:00.0 Off | Off                  |
+| 33%   23C    P8    16W / 260W |   56MiB / 24576MiB |  0%     Default                |
++-------------------------------------------------------------------------------------+
+| Processes:                                                                          |
+|  GPU   GI   CI        PID   Type   Process name                                     |
+|=====================================================================================|
+|    0   N/A  N/A     28840      G   /usr/libexec/Xorg                                |
+|    0   N/A  N/A   2268933      G   xfwm4                                            |
++-------------------------------------------------------------------------------------+
+                    </code></pre>
+                </div>
+
+
+                <p>In principle, it shouldn't 
+                    matter exactly which GPU was allocated to you, but I found that 
+                    Quadro RTX works a little better than the others.
+                </p>
+
+                <p>
+                    Finally, to launch Hyperdrive with GPU acceleration enabled, you need to add 
+                    the <span>--nv</span> flag to the usual Apptainer call:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer shell --nv hyperdrive.sif
+                    </code></pre>
+                </div>
+
+                <p>
+                    Once inside the container, you can throw another <span>nvidia-smi</span> to 
+                    be extra sure that everything works. It should return the same window containing the 
+                    GPU-specific info.
+                </p>
+
+            
 
 
                 <div class="d-flex justify-content-between">
