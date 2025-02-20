@@ -1,61 +1,133 @@
-<ul class="nav flex-column animated bounceInDown custom-vertical-nav">
-    <li class="nav-item">
-        <a class="nav-link active" href="index.html">Home</a>
-    </li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar-container">
+    <button class="navbar-toggler custom-navbar-button" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon custom-navbar-toggler"></span>
+    </button>
 
-    <li class="nav-item sub-menu"><a href="pages/asvo1-create-account.html" class="nav-link">Downloading MWA Data from ASVO<div class='fa fa-caret-right right'></div></a>
-        <ul class="list-unstyled">
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="nav flex-column animated bounceInDown custom-vertical-nav">
             <li class="nav-item">
-                <a class="nav-link" href="pages/asvo1-create-account.html">Creating an ASVO Account</a>
+                <a class="nav-link active" href="index.html">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="pages/asvo2-select-process.html">Selecting and Processing Data</a>
-            </li>
-            <li class='nav-item sub-menu'><a class="nav-link" href='pages/asvo3-giant-squid.html'>MWA giant-squid <div class='fa fa-caret-right right'></div></a>
-                <ul class="list-unstyled">
-                    <li class="nav-item"><a class="nav-link" href='pages/asvo3-giant-squid.html#giant-squid-installation'>Installation</a></li>
-                    <li class="nav-item"><a class="nav-link" href='pages/asvo3-giant-squid.html#giant-squid-usage'>Usage</a></li>
-                </ul>
-                </li>
-        </ul>
-    </li>
 
-    <li class='nav-item sub-menu'><a href='pages/page1-idl-setup.html' class="nav-link">FHD/eppsilon pipeline on Oscar<div class='fa fa-caret-right right'></div></a>
-        <ul class="list-unstyled">
-            <li class='nav-item'>
-                <a class="nav-link" href='pages/page1-idl-setup.html'>Setting up IDL </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href='pages/page2-fhd-deps.html'>FHD Dependencies</a>
-            </li>
-            <li class='nav-item sub-menu'><a class="nav-link" href='pages/page3-dep-link-test.html'>Dependency Linking and Testing <div class='fa fa-caret-right right'></div></a>
+            <li class="nav-item sub-menu">
+                <a href="pages/asvo1-create-account.html" class="nav-link">Downloading MWA Data from ASVO
+                    <div class='fa fa-caret-right right'></div>
+                </a>
                 <ul class="list-unstyled">
-                    <li class="nav-item"><a class="nav-link" href='pages/page3-dep-link-test.html#idl-startup-file'>IDL Startup File</a></li>
-                    <li class="nav-item"><a class="nav-link" href='pages/page3-dep-link-test.html#fhd-env-sourcing'>FHD Environment Sourcing</a></li>
-                    <li class="nav-item"><a class="nav-link" href='pages/page3-dep-link-test.html#test-file'>Test File</a></li>
-                </ul>
-                </li>
-            <li class="nav-item">
-                <a class="nav-link" href='pages/page4-summary.html'>Summary</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href='pages/page5-examples.html'>Examples</a>
-            </li>
-        </ul>
-    </li>
-
-    <li class='nav-item sub-menu'><a href='pages/wsclean1-oscar.html' class="nav-link">WSClean<div class='fa fa-caret-right right'></div></a>
-        <ul class="list-unstyled">
-            <li class='nav-item'>
-                <a class="nav-link" href='pages/wsclean1-oscar.html'>Installation on Oscar</a>
-            </li>
-            <li class='nav-item sub-menu'><a class="nav-link" href='pages/wsclean2-usage.html'>Usage<div class='fa fa-caret-right right'></div></a>
-                <ul class="list-unstyled">
-                    <li class="nav-item"><a class="nav-link" href="pages/wsclean2-usage.html#oscar-wsclean-access">Access Examples on Oscar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/wsclean2-usage.html#basic-wsclean-run">Basic WSClean run</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/wsclean2-usage.html#advanced-wsclean-run">Advanced WSClean run</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/asvo1-create-account.html">Creating an ASVO Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/asvo2-select-process.html">Selecting and Processing Data</a>
+                    </li>
+                    <li class="nav-item sub-menu">
+                        <a class="nav-link" href='pages/asvo3-giant-squid.html'>MWA giant-squid 
+                            <div class='fa fa-caret-right right'></div>
+                        </a>
+                        <ul class="list-unstyled">
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/asvo3-giant-squid.html#giant-squid-installation'>Installation</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/asvo3-giant-squid.html#giant-squid-usage'>Usage</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
+
+            <li class="nav-item sub-menu">
+                <a href='pages/page1-idl-setup.html' class="nav-link">FHD/eppsilon pipeline on Oscar
+                    <div class='fa fa-caret-right right'></div>
+                </a>
+                <ul class="list-unstyled">
+                    <li class="nav-item">
+                        <a class="nav-link" href='pages/page1-idl-setup.html'>Setting up IDL </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href='pages/page2-fhd-deps.html'>FHD Dependencies</a>
+                    </li>
+                    <li class="nav-item sub-menu">
+                        <a class="nav-link" href='pages/page3-dep-link-test.html'>Dependency Linking and Testing
+                            <div class='fa fa-caret-right right'></div>
+                        </a>
+                        <ul class="list-unstyled">
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/page3-dep-link-test.html#idl-startup-file'>IDL Startup File</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/page3-dep-link-test.html#fhd-env-sourcing'>FHD Environment Sourcing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/page3-dep-link-test.html#test-file'>Test File</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href='pages/page4-summary.html'>Summary</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href='pages/page5-examples.html'>Examples</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item sub-menu">
+                <a href="pages/hyperdrive1-installation.html" class="nav-link">MWA Hyperdrive
+                    <div class='fa fa-caret-right right'></div>
+                </a>
+                <ul class="list-unstyled">
+                    <li class="nav-item">
+                        <a href="pages/hyperdrive1-installation.html" class="nav-link">Installation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/hyperdrive2-gpu-acceleration.html" class="nav-link">GPU Acceleration</a>
+                    </li>
+                    <li class="nav-item sub-menu">
+                        <a class="nav-link" href='pages/hyperdrive3-usage.html'>Usage 
+                            <div class='fa fa-caret-right right'></div>
+                        </a>
+                        <ul class="list-unstyled">
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/hyperdrive3-usage.html#hyperdrive-required-files'>Required static files</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/hyperdrive3-usage.html#hyperdrive-calibrate'>Calibrate</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='pages/hyperdrive3-usage.html#hyperdrive-apply-solns'>Inspecting and applying the calibration solutions</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item sub-menu">
+                <a href='pages/wsclean1-oscar.html' class="nav-link">WSClean
+                    <div class='fa fa-caret-right right'></div>
+                </a>
+                <ul class="list-unstyled">
+                    <li class="nav-item">
+                        <a class="nav-link" href='pages/wsclean1-oscar.html'>Installation on Oscar</a>
+                    </li>
+                    <li class="nav-item sub-menu">
+                        <a class="nav-link" href='pages/wsclean2-usage.html'>Usage
+                            <div class='fa fa-caret-right right'></div>
+                        </a>
+                        <ul class="list-unstyled">
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/wsclean2-usage.html#oscar-wsclean-access">Access Examples on Oscar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/wsclean2-usage.html#basic-wsclean-run">Basic WSClean run</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/wsclean2-usage.html#advanced-wsclean-run">Advanced WSClean run</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
         </ul>
-    </li>
-</ul>
+    </div>
+</nav>

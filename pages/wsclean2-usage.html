@@ -27,9 +27,11 @@
     <div class="container-fluid">
         <div class="row">
             
-            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
-            
-            <div class="container mt-5 col-8 col-md-6">
+            <div class="col-12 col-lg-3 mb-0">
+                <div class="custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            </div>
+
+            <div class="container mt-2 col-12 col-lg-6">
 
                 <h1 class="mb-4">WSClean</h1>
 
@@ -176,8 +178,9 @@ Apptainer> bash wsclean_basic.sh
 
                 <p><span>fits</span> files are somewhat inconvenient because
                 you cannot simply open it and look at it. To do that, you need 
-                specific software such as <a href="https://sites.google.com/cfa.harvard.edu/saoimageds9/download" target="_blank">DS9</a>. 
-                Instead of using DS9, however, I will show you how to plot these images in Python.
+                specific software such as <a href="https://sites.google.com/cfa.harvard.edu/saoimageds9/download" target="_blank">DS9</a> 
+                or <a href="https://cartavis.org/" target="_blank">CARTA</a>. 
+                Instead of using either of these, however, I will show you how to plot these images in Python.
                 The <span>plot_wsclean_output.ipynb</span> Jupyter Notebook file contains the following
                 lines of code:
                 </p>
@@ -510,11 +513,14 @@ plt.show()
 
 
                 
-            <p class="last-edit">Last edit: 2025-02-16</p>
+            <div class="d-flex justify-content-between">
+                <p class="last-edit">Last edit: 2025-02-16</p>
+                <p class="last-edit">Author: Jade Ducharme</p>
+            </div>
 
             </div>
             
-            <div class="d-none d-md-block col-md-3">
+            <div class="d-none d-lg-block col-lg-3"></div>
             </div>
         </div>
     </div>

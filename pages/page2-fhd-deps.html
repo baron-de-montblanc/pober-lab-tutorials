@@ -27,10 +27,11 @@
     <div class="container-fluid">
         <div class="row">
             
-            <div class="col-4 col-md-3 custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
-            
-            <div class="container mt-5 col-8 col-md-6">
+            <div class="col-12 col-lg-3 mb-0">
+                <div class="custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            </div>
 
+            <div class="container mt-2 col-12 col-lg-6">
                 <h1 class="mb-4">FHD/eppsilon pipeline on Oscar</h1>
 
             <h2 id="fhd-deps">FHD Dependencies</h2>
@@ -160,7 +161,7 @@ Healpix_3.83_2024Nov13.tar.gz
                                     <div class="code-header">shell</div>
                                     <pre class="custom-code"><code class="language-shell">
 [~/Downloads]$ scp Healpix_3.83_2024Nov13.tar.gz \
-&lt;brownUsername&gt;@ssh.ccv.brown.edu:~/fhd_utils
+&lt;brownUsername&gt;@ssh.ccv.brown.edu:~/fhd_deps
                                     </code></pre>
                                 </div>
 
@@ -392,11 +393,14 @@ $ module load imagemagick
                 </p>
                 </ol>
 
-            <p class="last-edit">Last edit: 2025-02-15</p>
+                <div class="d-flex justify-content-between">
+                    <p class="last-edit">Last edit: 2025-02-15</p>
+                    <p class="last-edit">Author: Jade Ducharme</p>
+                </div>
 
             </div>
             
-            <div class="d-none d-md-block col-md-3">
+            <div class="d-none d-lg-block col-lg-3"></div>
             </div>
         </div>
     </div>

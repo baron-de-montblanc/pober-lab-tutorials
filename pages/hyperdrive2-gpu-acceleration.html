@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperdrive GPU Acceleration</title>
+
+    <script>
+        if (window.location.hostname === "baron-de-montblanc.github.io") {
+            document.write('<base href="/pober-lab-tutorials/">');
+        } else {
+            document.write('<base href="/">');
+        }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="sha384-QDSPDoVOoSWz2ypaRUidLmLYl4RyoBWI44iA5agn6jHegBxZkNqgm2eHb6yZ5bYs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/index.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rainbow.min.css" integrity="sha512-ohxc5OnaYpC+nn8t5pH3F9Fx4xjwE7bnFDN7qX3GWWIK70+ivPEYQejZQOV96YmurTP5IaqmxyFnXDIEHg7Vhw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+    <div id="header-container"></div> <!-- Header loads here -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-12 col-lg-3 mb-0">
+                <div class="custom-vertical-nav" id="navbar-template"></div> <!-- Navbar loads here -->
+            </div>
+
+            <div class="container mt-2 col-12 col-lg-6">
+
+                <h1 class="mb-4">MWA Hyperdrive</h1>
+
+                <h2>GPU Acceleration</h2>
+
+                <p>
+                    If you downloaded a Hyperdrive image containing the word <span>cuda</span>, 
+                    then GPU acceleration should be possible. To enable it on Oscar, you need to make 
+                    sure to open a session on the <span>gpu</span> partition (as opposed to the 
+                    default <span>batch</span> partition). I like to use the 
+                    <a href="https://ood.ccv.brown.edu/pun/sys/dashboard/" target="_blank">OpenOnDemand</a> (OOD)
+                    portal, but you can do it with a regular batch script or within an interactive session as 
+                    well.
+                </p>
+
+                <p>
+                    If using OOD, select the "Desktop (Advanced)" under "Expert GUIs" and make sure that 
+                    the <span>gpu</span> partition is selected. Select the amount of time you need (typically at 
+                    least one or two hours for an MWA calibration job) and the memory (be generous here, I 
+                    usually just go for the maximum allowed 192Gb). For the number of GPUs, you should only select 
+                    one. To my knowledge, Hyperdrive doesn't parallelize across GPUs.
+                </p>
+
+                <p>
+                    Once your session is up and running, verify that the GPUs are connected via:
+                </p>
+
+ 
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ nvidia-smi
+                    </code></pre>
+                </div>
+
+                <p>
+                    If GPUs are <em>not</em> connected, you will get an error:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+bash: nvidia-smi: command not found...
+                    </code></pre>
+                </div>
+
+                <p>
+                    If everything is correctly set up, you will instead see some information 
+                    about your device:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Wed Feb 19 18:53:51 2025
++-------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.129.03              Driver Version: 535.129.03    CUDA Version: 12.2 |
+|-------------------------------------------------------------------------------------|
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC         |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M.         |
+|                               |                      |          MIG M.              |
+|===  ===================  ============  ============  ============  =================|
+|  0  Quadro RTX 6000      On           | 00000000:60:00.0 Off | Off                  |
+| 33%   23C    P8    16W / 260W |   56MiB / 24576MiB |  0%     Default                |
++-------------------------------------------------------------------------------------+
+| Processes:                                                                          |
+|  GPU   GI   CI        PID   Type   Process name                                     |
+|=====================================================================================|
+|    0   N/A  N/A     28840      G   /usr/libexec/Xorg                                |
+|    0   N/A  N/A   2268933      G   xfwm4                                            |
++-------------------------------------------------------------------------------------+
+                    </code></pre>
+                </div>
+
+
+                <p>In principle, it shouldn't 
+                    matter exactly which GPU was allocated to you, but I found that 
+                    Quadro RTX works a little better than the others.
+                </p>
+
+                <p>
+                    Finally, to launch Hyperdrive with GPU acceleration enabled, you need to add 
+                    the <span>--nv</span> flag to the usual Apptainer call:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer shell --nv hyperdrive.sif
+                    </code></pre>
+                </div>
+
+                <p>
+                    Once inside the container, you can throw another <span>nvidia-smi</span> to 
+                    be extra sure that everything works. It should return the same window containing the 
+                    GPU-specific info.
+                </p>
+
+            
+
+
+                <div class="d-flex justify-content-between">
+                    <p class="last-edit">Last edit: 2025-02-19</p>
+                    <p class="last-edit">Author: Jade Ducharme</p>
+                </div>
+
+            </div>
+            
+            <div class="d-none d-lg-block col-lg-3"></div>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+<div id="footer-template"></div> <!-- Footer loads here -->
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js" integrity="sha512-nQ9BQEzuov+Ry6EIH8ve7VKKdOG91Ix3SAQcFmOiBR5qG8sJONrph1InWTJOGjfP5QkSTSy4VnkEsPMoFYRsUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js" integrity="sha512-W4zfUSnG/iue7LUx5hV2wF+akM0hVh4afLk8Avl3reONnH2lF5wPrg/D0rMGWHgZE2d+4XTjG5EJWzkyegUd5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/autoit.min.js" integrity="sha512-IPjYZ/J8t6x31d/SARbULBpe6IjG7MbV51kipvGfCb8Lepy33XHEgerqSA5+HsBfCeLKT35oAPndgo6p2AzooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js" integrity="sha512-/uCTceIDOniHf+VUKbCnP/x6GQSRrm4GwUtQYMgKa9yIZPGzlR04flSsD+2or7bPn44VY9inIHI4cwNCcZmJDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="assets/js/load-templates.js"></script>
+<script src="assets/js/copy-code.js"></script>
+<script src="assets/js/page-navigation-buttons.js"></script>
