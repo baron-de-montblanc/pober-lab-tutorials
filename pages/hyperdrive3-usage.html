@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tutorial on using the Hyperdrive calibration software for MWA data. Prepared for use by Brown University students in the Jonathan Pober lab.">
+    <meta name="keywords" content="Pober, Jonathan Pober, Brown University, MWA, Hyperdrive, Radio astronomy">
+    <meta name="robots" content="index, follow">
     <title>MWA Hyperdrive Usage</title>
 
     <script>
@@ -233,7 +236,7 @@ Apptainer> bash /path/to/hyperdrive_calibration.sh
 
                 <p>
                     Once the calibration job is done, you can create another bash script 
-                    for applying them; say <span>hypderdrive_apply.sh</span>. Open that up 
+                    for applying them; say <span>hyperdrive_apply.sh</span>. Open that up 
                     and define a basic calibration application job as follows:
                 </p>
 
@@ -264,6 +267,74 @@ Apptainer> hyperdrive solutions-plot calibration_solutions.fits
                 </div>
 
 
+                <p>
+                    This produces two image plots, "hyperdrive_solutions_amps.png" and "hyperdrive_solutions_phases.png". 
+                    As illustrated in the 
+                    <a href="https://mwatelescope.github.io/mwa_hyperdrive/user/di_cal/tutorial.html" target="_blank">Hyperdrive docs</a>, 
+                    you mainly want to make sure that the solutions change smoothly as a function of 
+                    frequency.
+                </p>
+
+                <p>
+                    If you are satisfied with your calibration solutions, go ahead and apply 
+                    them to the data:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+Apptainer> bash hyperdrive_apply.sh
+                    </code></pre>
+                </div>
+
+
+                <h3 id="hyperdrive-sky-subtraction">Bonus: sky-subtraction</h3>
+
+                <p>
+                    In some cases, it can be useful to apply sky-subtraction to your 
+                    calibrated data (for example, if your data is known to contain 
+                    radio frequency interference and you are trying to isolate 
+                    that signal.)
+                </p>
+
+                <p>
+                    To apply sky-subtraction, let's create a <span>hyperdrive_subtract.sh</span> bash 
+                    script. Open that up and copy-paste the following commands:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+hyperdrive vis-subtract \
+    -d calibrated.ms 1066742016.metafits \
+    -s "$MWA_SOURCE_LIST" \
+    -n 8000 -i\
+    -o calib_subtracted.ms
+                    </code></pre>
+                </div>
+
+                <p>
+                    This takes in your calibrated data along with the original metafits file, the source 
+                    list defined in your <span>.bashrc</span> and subtracts the 8000 brightest 
+                    sources. The <span>-i</span> flag is crucial. Without it, the program actually subtracts 
+                    everything <em>except</em> the 8000 brightest sources. Finally, it writes out the sky-subtracted 
+                    data in the specified <span>calib_subtracted.ms</span> file.
+                </p>
+
+                <p>
+                    To launch this job, as always:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[containers]$ apptainer shell --nv hyperdrive.sif
+Apptainer> cd /path/to/hyperdrive
+Apptainer> bash hyperdrive_subtract.sh
+                    </code></pre>
+                </div>
 
 
 
