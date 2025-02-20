@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://baron-de-montblanc.github.io/pober-lab-tutorials/sitemap.xml
