@@ -1,15 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!--  created with Free Online Sitemap Generator www.xml-sitemaps.com  -->
 
 <url>
-    <loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/</loc>
-    <lastmod>2025-02-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/</loc>
+<lastmod>2025-02-20T20:06:26+00:00</lastmod>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/index.html</loc>
+<lastmod>2025-02-20T20:06:26+00:00</lastmod>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/asvo1-create-account.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/asvo2-select-process.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/asvo3-giant-squid.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/hyperdrive1-installation.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/hyperdrive2-gpu-acceleration.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/hyperdrive3-usage.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/page1-idl-setup.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/page2-fhd-deps</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/page3-dep-link-test.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/page4-summary.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/page5-examples.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/wsclean1-oscar.html</loc>
+</url>
+
+<url>
+<loc>https://baron-de-montblanc.github.io/pober-lab-tutorials/pages/wsclean2-usage.html</loc>
 </url>
 
 </urlset>
