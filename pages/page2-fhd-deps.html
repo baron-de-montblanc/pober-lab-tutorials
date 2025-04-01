@@ -368,47 +368,68 @@ $ source ~/.bashrc
                     <p>That's it! HEALPix should now be successfully installed!</p>
                     </li>
 
-                <li class="mb-2">
-
-                    <p>Optional: the <a href="https://github.com/EoRImaging/eppsilon/" target="_blank">eppsilon</a>
-                        power spectrum generation code. In practice, if you 
-                        are reading this tutorial, you will probably need 
-                        <span>eppsilon</span>. Go ahead and download it via:
-                    </p>
-
-                    <div class="code-container mt-3">
-                        <div class="code-header">shell</div>
-                        <pre class="custom-code"><code class="language-shell">
-[~/fhd_deps]$ git clone git@github.com:EoRImaging/eppsilon.git
-                        </code></pre>
-                    </div>
-                </li>
-
-                <li>
-
-                    <p>
-                        Imagemagick. This dependency is 
-                        detailed <a href="https://imagemagick.org/index.php" target="_blank">here</a>, but 
-                         the good thing is we don't actually have to download or install it! 
-                         Oscar has a module for it already! Simply run:
-                    </p>
-
-                     <div class="code-container mt-3">
-                        <div class="code-header">shell</div>
-                        <pre class="custom-code"><code class="language-shell">
+                    <li class="mb-2">
+                        
+                        <p>
+                            Imagemagick. This dependency is 
+                            detailed <a href="https://imagemagick.org/index.php" target="_blank">here</a>, but 
+                            the good thing is we don't actually have to download or install it! 
+                            Oscar has a module for it already! Simply run:
+                        </p>
+                        
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
 $ module load imagemagick
-                        </code></pre>
-                    </div>
-                </li>
+                            </code></pre>
+                        </div>
+                    </li>
+                    
+                    <li class="mb-2">
+    
+                        <p>Optional: the <a href="https://github.com/EoRImaging/eppsilon/" target="_blank">eppsilon</a>
+                            power spectrum generation code. In practice, if you 
+                            are reading this tutorial, you will probably need 
+                            <span>eppsilon</span>. Go ahead and download it via:
+                        </p>
+    
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:EoRImaging/eppsilon.git
+                            </code></pre>
+                        </div>
+                    </li>
+
+
+                    <li class="mb-2">
+
+                        <p>
+                            Optional: the EoR Imaging group's 
+                            <a href="https://github.com/EoRImaging/pipeline_scripts", target="_blank"><span>pipeline_scripts</span></a>.
+                            These contain a variety of IDL and bash scripts containing default keywords 
+                            and parameters for all purposes. I definitely recommend downloading it.
+                        </p>
+
+                        <div class="code-container mt-3">
+                            <div class="code-header">shell</div>
+                            <pre class="custom-code"><code class="language-shell">
+[~/fhd_deps]$ git clone git@github.com:EoRImaging/pipeline_scripts.git
+                            </code></pre>
+                        </div>
+                    </li>
+
+                    </li>
+
+                </ol>
 
                 <p>
                     This should cover all the required <span>FHD</span> dependencies! 
                     Next up, let's make sure IDL can correctly access them.
                 </p>
-                </ol>
 
                 <div class="d-flex justify-content-between">
-                    <p class="last-edit">Last edit: 2025-02-15</p>
+                    <p class="last-edit">Last edit: 2025-04-01</p>
                     <p class="last-edit">Author: Jade Ducharme</p>
                 </div>
 
