@@ -97,12 +97,19 @@ $ nano idl_startup.pro
 !PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/Healpix_3.83') + ':' + !PATH
 !PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/fhdps_utils') + ':' + !PATH
 !PATH = Expand_Path('+/ABSOLUTE/PATH/TO/fhd_deps/pipeline_scripts') + ':' + !PATH
+!PATH = Expand_Path('+/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/idl_wrappers') + ':' + !PATH
         </code></pre>
     </div>
 
     <p>Once again, make sure to replace 
         <span>ABSOLUTE/PATH/TO</span> with the absolute path to 
         your <span>fhd_deps</span> folder.
+    </p>
+
+    <p>
+        The last line points IDL to a folder containing some helpful wrapper scripts to get you started
+        running FHD/eppsilon jobs on Oscar. More on that later... (Of course, this only works if 
+        you have access to the group's shared data folder on Oscar.)
     </p>
 
     <p>Once this is done, save and close the file. Next, 
