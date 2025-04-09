@@ -6,7 +6,7 @@
     <meta name="description" content="Examples for how to use the FHD/eppsilon pipeline on Oscar. Prepared for use by Brown University students in the Jonathan Pober lab.">
     <meta name="keywords" content="Pober, Jonathan Pober, Brown University, IDL, Oscar, CCV, FHD, eppsilon, Radio astronomy">
     <meta name="robots" content="index, follow">
-    <title>Examples</title>
+    <title>FHD/eppsilon Examples</title>
 
     <script>
         if (window.location.hostname === "baron-de-montblanc.github.io") {
@@ -49,11 +49,197 @@
 
                 <h1 class="mb-4">Examples</h1>
 
-                <p>Please check back in later!</p>
+                <p>
+                    There is a steep learning curve for running FHD/eppsilon, and for using IDL in general.
+                    In fact, I have often heard Jonathan quote a colleague who described IDL as 
+                    "user-hostile"! I have prepared some examples to hopefully help lessen this 
+                    impression.
+                </p>
+
+                <p>
+                    This tutorial assumes that you have access to the group's <span>shared</span> 
+                    data folder on <a href="https://docs.ccv.brown.edu/oscar", target="_blank">Oscar</a>.
+                </p>
+
+                <h2 id="fhd-only-example">FHD</h2>
+
+                <p>
+                    First, we will create a simple calibration run for a single MWA observation. 
+                    This will generate output "image cubes", which we will then be able to pass 
+                    as inputs to <span>eppsilon</span>.
+                </p>
+
+                <p>
+                    The data have already been downloaded for you. 
+                    Start by navigating to the <span>fhd_examples</span> folder I created in 
+                    the group's <span>shared</span> data folder:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+$ cd /oscar/data/jpober/shared/Tutorials/fhd_examples
+                    </code></pre>
+                </div>
+
+                You should find a directory structure that looks like this:
+
+                <ul class="list-unstyled tree-ul">
+                    <li>1061316544.metafits</li>
+                    <li>1061316544.uvfits</li>
+                    <li>sample_fhd.pro</li>
+                    <li>sample_fhd.sh</li>
+                </ul>
+
+                <p>
+                    The <span>uvfits</span> file is the raw MWA input data that we wish to calibrate. 
+                    It was originally downloaded from 
+                    <a href="https://asvo.mwatelescope.org/", target="_blank">ASVO</a> in raw 
+                    MWA correlator FITS file format, via the "Visibility Download Job" option. For more 
+                    information on downloading and/or converting data on ASVO, visit the 
+                    <a href="pages/asvo1-create-account.html">Downloading MWA Data from ASVO</a> 
+                    tutorial page. This raw data was then converted to the required <span>uvfits</span> 
+                    format using <a href="https://pyuvdata.readthedocs.io/en/latest/", target="_blank"><span>pyuvdata</span></a>.
+                    (<strong>NOTE:</strong> As of April 2025, downloading MWA data directly to <span>uvfits</span> format 
+                    via ASVO's built-in converter is incompatible with FHD, and will NOT work. Please download the 
+                    raw data first, and manually convert it to <span>uvfits</span> using <span>pyuvdata</span>.)
+                </p>
+
+                <p>
+                    The <span>metafits</span> file is downloaded jointly along with the <span>uvfits</span>. 
+                    It contains observation metadata (e.g. time-stamps, number of frequency channels, number 
+                    of baselines), but is not actually read in by <span>FHD</span>.
+                </p>
+
+                <p>
+                    Next, the <span>sample_fhd.pro</span> file defines the IDL procedure used for 
+                    our basic calibration run. It contains the following:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">IDL</div>
+                    <pre class="custom-code"><code class="language-autoit">
+pro sample_fhd
+
+; Keywords
+obs_id = '1061316544'
+output_directory = './'
+version = 'test'
+vis_file_list = './' + string(obs_id) +'.uvfits'
+
+; Directory setup
+fhd_file_list=fhd_path_setup(vis_file_list,version=version,output_directory=output_directory)
+healpix_path=fhd_path_setup(output_dir=output_directory,subdir='Healpix',output_filename='Combined_obs',version=version)
+
+; Set global defaults and bundle all the variables into a structure.
+; Any keywords set on the command line or in the top-level wrapper will supercede these defaults
+eor_wrapper_defaults,extra
+
+print,""
+print,"Keywords set in wrapper:"
+print,structure_to_text(extra)
+print,""
+general_obs,_Extra=extra
+
+end
+                    </code></pre>
+                </div>
+
+
+
+                <p>
+                    It starts by defining some keywords, such as the observation ID and the 
+                    desired output directory. If the specified output directory does not 
+                    already exist, it will be automatically created on runtime.
+                </p>
+
+                <p>
+                    After setting up the various directories, it compiles the
+                    <span>eor_wrapper_defaults</span> procedure, which is a part of the 
+                    <a href="https://github.com/EoRImaging/pipeline_scripts#", target="_blank"><span>pipeline_scripts</span></a>
+                    dependency. This procedure defines the default settings for all EoR observations. 
+                    Keywords defined directly in the <span>sample_fhd.pro</span> script will override the defaults, 
+                    but we are not setting any here. Just a basic run with all basic parameters.
+                </p>
+
+                <p>
+                    Finally, the <span>general_obs</span> procedure launches the calibration run using 
+                    all the defined keywords and parameters. That's it!
+                </p>
+
+                <p>
+                    The next file we want to look at is <span>sample_fhd.sh</span>:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+#SBATCH -J sample-fhd-calib
+#SBATCH -c 12
+#SBATCH --mem=128G
+#SBATCH --time=8:00:00
+#SBATCH -o sample_fhd-%j.out
+#SBATCH -e sample-fhd-%j.out
+#SBATCH --account=jpober-condo
+
+module load imagemagick
+module load idl
+module load git
+source /oscar/runtime/software/external/idl/idl89/bin/idl_setup.bash
+
+/oscar/runtime/software/external/idl/idl89/bin/idl -IDL_DEVICE ps -quiet -IDL_CPU_TPOOL_NTHREADS 12 -e sample_fhd
+
+if [ $? -eq 0 ]
+then
+    echo "Finished"
+    exit 0
+else
+    echo "Job Failed"
+    exit 1
+fi
+                    </code></pre>
+                </div>
+
+
+                <p>
+                    The script starts by loading the appropriate modules, and sourcing the 
+                    <span>idl_setup.bash</span> file that connects IDL to all the 
+                    required FHD/eppsilon dependencies.
+                </p>
+
+                <p>
+                    Then, it calls IDL directly via 
+                    <span>/oscar/runtime/software/external/idl/idl89/bin/idl</span> (<strong>NOTE:</strong> 
+                    this is important, only calling <span>idl</span> fails for some reason) and tells it 
+                    to launch the <span>sample_fhd</span> procedure we just wrote.
+                </p>
+
+                <p>
+                    Note the crazy resources I asked for here. This is definitely overkill but these 
+                    jobs are pretty resouce-intensive. You might want to play around with the number of 
+                    cores, amount of memory, and amount of time allocated. This simple 
+                    calibration job should take between two and three hours to complete.
+                </p>
+
+                <p>
+                    To launch this job, simply open up a terminal on an Oscar login node, <span>cd</span> 
+                    to the <span>fhd_examples</span> directory and run:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[fhd_examples]$ sbatch sample_fhd.sh
+                    </code></pre>
+                </div>
 
                 
                 <div class="d-flex justify-content-between">
-                    <p class="last-edit">Last edit: 2025-02-15</p>
+                    <p class="last-edit">Last edit: 2025-04-01</p>
                     <p class="last-edit">Author: Jade Ducharme</p>
                 </div>
 
