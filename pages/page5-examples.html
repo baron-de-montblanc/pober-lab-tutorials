@@ -61,7 +61,7 @@
                     data folder on <a href="https://docs.ccv.brown.edu/oscar", target="_blank">Oscar</a>.
                 </p>
 
-                <h2 id="fhd-only-example">FHD - Basic</h2>
+                <h2 id="fhd-basic">FHD - Basic</h2>
 
                 <p>
                     First, we will create a simple calibration run for a single MWA observation. 
@@ -262,6 +262,496 @@ fi
 [fhd_eppsilon/shell_scripts]$ sbatch fhd_basic.sh
                     </code></pre>
                 </div>
+
+
+                <h2 id="fhd-advanced">FHD - Advanced</h2>
+
+                <p>Let's move on to a more advanced example. In the
+                     <span>/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/idl_wrappers</span> 
+                     directory, you will find a file called <span>fhd_single_uvfits.pro</span>. 
+                      This <span>IDL</span> wrapper contains the 
+                    "optimal" set of <span>FHD</span> keywords, as of Feb. 2026:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">IDL</div>
+                    <pre class="custom-code"><code class="language-autoit">
+pro fhd_single_uvfits
+
+    compile_opt strictarr
+
+    ;-- Read command-line arguments
+    args = Command_Line_Args(count=nargs)
+
+    obs_idx          = args[0]  ; OBSID index in data_path
+    data_path        = args[1]
+    output_directory = args[2]
+    version          = args[3]
+
+    ;-- Determine vis_file_list using obs_idx as an index
+    file_list = file_search(data_path + '*.uvfits', count=nfiles)
+    if nfiles EQ 0 then message, 'No .uvfits files found in ' + data_path
+    if long(obs_idx) GE nfiles then message, 'obs_idx out of bounds.'
+
+    vis_file_list = [file_list[long(obs_idx)]]
+
+    ;-- Directory setup
+    fhd_file_list = fhd_path_setup(vis_file_list, version=version, output_directory=output_directory)
+    healpix_path  = fhd_path_setup(output_dir=output_directory, subdir='Healpix', output_filename='Combined_obs', version=version)
+
+    ; ================== Custom keywords go here --> These will override the keywords in eor_wrapper_defaults ================
+    
+    instrument                            = 'mwa2' ; MWA Phase II
+    
+    ; -- Catalog/model keywords
+    calibration_catalog_file_path         = filepath('GLEAM_v2_plus_rlb2019.sav',root=rootdir('FHD'),subdir='catalog_data')
+    calibration_subtract_sidelobe_catalog = filepath('GLEAM_v2_plus_rlb2019.sav',root=rootdir('FHD'),subdir='catalog_data')
+    model_subtract_sidelobe_catalog       = filepath('GLEAM_v2_plus_rlb2019.sav',root=rootdir('FHD'),subdir='catalog_data')
+    subtract_sidelobe_catalog             = filepath('GLEAM_v2_plus_rlb2019.sav',root=rootdir('FHD'),subdir='catalog_data')
+    ALLOW_SIDELOBE_MODEL_SOURCES          = 1
+    ALLOW_SIDELOBE_CAL_SOURCES            = 1
+    diffuse_model                         = 0
+    model_delay_filter                    = 1     ; Removes any higher k_tau power from the model
+    
+    ; -- Calibration keywords
+    diffuse_calibrate                     = 0
+    calibration_flux_threshold            = 0.1
+    cal_time_average                      = 0
+    cal_bp_transfer                       = 0
+    max_cal_iter                          = 1000L
+    cal_reflection_mode_theory            = 1
+    cal_mode_fit                          = [90,150,230,320]
+    use_adaptive_calibration_gain         = 1
+    calibration_base_gain                 = 0.5
+    auto_ratio_calibration                = 1
+    calibration_auto_fit                  = 0
+    no_calibration_frequency_flagging     = 0
+    cal_stop                              = 0     ; if 1, code stops after calibration and does NOT produce Healpix cubes
+    
+    ; -- Other keywords
+    restrict_hpx_inds                     = 'EoR0_high_healpix_inds_3x.idlsave'
+    no_frequency_flagging                 = 0     ; Respect uvfits flags
+    beam_clip_floor                       = 1
+    FoV                                   = 0
+    interpolate_kernel                    = 1
+    beam_nfreq_avg                        = 1
+    ps_kspan                              = 200.  ; Prevent power leakage by not gridding longer baselines
+    n_avg                                 = 2     ; Average in frequency to 160kHz
+    digital_gain_jump_polyfit             = 0
+    dimension                             = 1024  ; For phase 2, larger default dimension is not necessary
+    recalculate_all                       = 1     ; WARNING: will not read in sav files
+    
+    
+    ; ===================================== End of custom keywords =================================================
+
+    ;-- Set EoR defaults and bundle all the extra keywords into a structure
+    eor_wrapper_defaults, extra
+    fhd_depreciation_test, _Extra=extra
+
+    print, ''
+    print, 'Keywords set in wrapper:'
+    print, structure_to_text(extra)
+    print, ''
+
+    ;-- This is the main FHD procedure
+    general_obs, _extra=extra
+
+end
+                    </code></pre>
+                </div>
+
+                <p>
+                    There is a lot more going on, but the structure is very similar. First, instead of hard-coding 
+                    the observation ID and the data paths, this setup allows them to be read off from whatever process calls 
+                    the wrapper. We will shortly look at the shell script that calls <span>idl</span> on this wrapper, and 
+                    we will see that the observation ID and data paths are defined in that shell script. This makes it a lot 
+                    easier to reuse this wrapper, instead of overwriting it each time with new arguments.
+                </p>
+
+                <p>
+                    Next, the custom keywords. Detailed explanations for each of these keywords can be found in the 
+                    <a href="https://github.com/EoRImaging/FHD/blob/master/dictionary.md" target="_blank"><span>FHD</span> documentation</a>, 
+                    but I will briefly list a few important ones:
+                </p>
+
+                <ul>
+                    <li>
+                        <span>cal_stop</span>: If this is set to <span>1</span>, <span>FHD</span> will calibrate the 
+                        data and terminate. It will NOT produce the <span>Healpix</span> cubes that are required for 
+                        further processing in <span>eppsilon</span>. (Typically, you want it set to <span>0</span>.)
+                    </li>
+                    <li>
+                        <span>no_frequency_flagging</span>: Set to <span>1</span> for MWA Phase III data, as it disables 
+                        coarse-band flagging (in fact, I think it removes all flags, but I could be wrong). Should 
+                        definitely be set to <span>0</span> for MWA Phase I and Phase II data.
+                    </li>
+                    <li>
+                        <span>n_avg</span>: This one is super important. With years, the community has converged on 
+                        preferring MWA power spectra to be averaged to an overall frequency resolution of 160khz.
+                         <span>n_avg</span> specifies the number of adjacent frequency channels that should 
+                        be averaged together during the processing. Whatever number you set here, make sure it evens out so 
+                        that your final cubes have a frequency resolution of 160khz.
+                    </li>
+                    <li>
+                        <span>recalculate_all</span>: If set to <span>0</span>, <span>FHD</span> will read in checkpoint 
+                        <span>.sav</span> files on any subsequent run (the first run creates the <span>.sav</span> files 
+                        automatically). If you want to force <span>FHD</span> to recalculate everything from scratch on 
+                        every subsequent run, set this to <span>1</span>.
+                    </li>
+                </ul>
+
+                <p>
+                    Note that this procedure takes in an observation <i>index</i>, as opposed to an MWA observation ID. This 
+                    is because I've specifically optimized this for array jobs. I did this because typically, when you run <span>FHD</span>, 
+                    you need to run it on a LOT of data. This procedure makes it easy to define a global <span>data_path</span> that may contain 
+                    hundreds of <span>uvfits</span> files, and then specifying the index of the desired file in that path. The top-level 
+                    shell script controlling all of this can then trivially run an array job across all file indices.
+                </p>
+
+                <p>
+                    Speaking of the top-level shell script, let's take a look at it. You will find it in 
+                    <span>/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/shell_scripts/fhd_advanced.sh</span>:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+#SBATCH -J fhd_advanced
+#SBATCH -c 12
+#SBATCH --mem=200G
+#SBATCH --time=48:00:00
+#SBATCH --account=jpober-condo
+
+#SBATCH --array=0-2
+
+# Use '%A' for array-job ID, '%J' for job ID and '%a' for task ID
+#SBATCH -o /oscar/data/jpober/shared/Tutorials/fhd_eppsilon/slurm_out/fhd_advanced-%A-%a.out
+#SBATCH -e /oscar/data/jpober/shared/Tutorials/fhd_eppsilon/slurm_out/fhd_advanced-%A-%a.out
+
+module load imagemagick
+module load idl
+
+echo "Starting job $SLURM_ARRAY_TASK_ID on $HOSTNAME"
+
+retry_delay=300  # seconds
+
+while true; do
+    echo "Attempting to start IDL..."
+    output=$( idl \
+        -IDL_DEVICE ps \
+        -quiet \
+        -IDL_CPU_TPOOL_NTHREADS 12 \
+        -e fhd_single_uvfits \
+        -args ${SLURM_ARRAY_TASK_ID} '/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/data/' '/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs/' 'advanced'\
+        2>&1 )
+        
+    status=$?
+    echo "$output"
+    
+    if ! echo "$output" | grep -q "Failed to acquire license"; then
+        echo "License successfully aquired. Job ended with status $status."
+        break
+    else
+        echo "IDL license unavailable. Retrying in $retry_delay seconds..."
+        sleep $retry_delay
+    fi
+
+done
+                    </code></pre>
+                </div>
+
+
+                <p>
+                    There are a few major differences between this script and the <span>fhd_basic.sh</span> script. 
+                    First, this is an
+                     <a href="https://docs.ccv.brown.edu/oscar/submitting-jobs/array" target="_blank"> <i>array</i> job </a>, 
+                     which you can see from the <span>#SBATCH --array=0-2</span> line. This means that this script is 
+                     submitting <i>three</i> jobs to SLURM, one for every integer in the range 0-2 (2 included).
+                </p>
+
+                <p>
+                    We can use this to our advantage. The <span>SLURM_ARRAY_TASK_ID</span> automatically records the 
+                    array ID, and since we can pass that as an argument to <span>idl</span>, we are effectively running the 
+                    <span>fhd_single_uvfits</span> procedure on all three files located in the specified data path.
+                </p>
+
+                <p>
+                    If you're wondering what's up with the <span>while</span> loop, that's there because we only have a 
+                    limited number of active IDL licenses (around 24 as of Feb. 2026). One job on SLURM = one IDL license 
+                    required (I know, what a scam). The <span>while</span> loop is there as a safeguard in case you or a group member 
+                    already has a lot of active IDL jobs: it tells IDL to keep retrying until it is able to acquire a license.
+                </p>
+
+                <p>
+                    If you need to submit way more than ~24 jobs (let's say you need to run <span>FHD</span> on 300 
+                    observations) and you're worried about filling up the queue, you can limit the number of simultaneous 
+                    array jobs using a hashtag; e.g. <span>#SBATCH --array=0-299%20</span>. This will run your 300 jobs, 
+                    but only allow 20 at a time, freeing up the queue for other group members and making sure you don't use up 
+                    all the IDL licenses.
+                </p>
+
+                <p>
+                    To try out this advanced FHD run, simply  <span>cd</span> 
+                    into the <span>fhd_eppsilon/shell_scripts</span> directory and run:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[fhd_eppsilon/shell_scripts]$ sbatch fhd_advanced.sh
+                    </code></pre>
+                </div>
+
+
+
+                <h2 id="integrate">FHD - Cube Integration</h2>
+
+
+                <p>
+                    A successful <span>FHD</span> run will produce a <i>ton</i> of output 
+                    files. For example, the <span>fhd_advanced</span> example from the previous 
+                    section would populate an <span>fhd_advanced</span> directory located in
+                     <span>/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs</span>:
+                </p>
+
+                <ul class="list-unstyled tree-ul">
+                    fhd_advanced
+                    <ul class="list-unstyled tree-ul">
+                        <li>beams</li>
+                        <li>calibration</li>
+                        <li>grid_data</li>
+                        <li>Healpix</li>
+                        <li>mapfn</li>
+                        <li>metadata</li>
+                        <li>output_data</li>
+                        <li>output_images</li>
+                        <li>vis_data</li>
+                    </ul>
+                </ul>
+
+                <p>
+                    I won't go into detail as to what all these subdirectories contain (please refer to the 
+                    <a href="https://github.com/EoRImaging/FHD" target="_blank"><span>FHD</span> documentation</a>), 
+                    but I will mention a few important things.
+                </p>
+
+                <ul>
+                    <li> 
+                        The <span>output_images</span> folder is your most important diagnostic tool. It contains several 
+                        PNGs showing the calibration amplitude, the dirty image, the model image, the UV weights, and so on. 
+                        You should always take a look at these outputs to understand what (if anything) went wrong during 
+                        your <span>FHD</span> run.
+                    </li>
+                    <li>
+                        The <span>Healpix</span> folder contains your ultimate data product. If you open it, you should find 
+                        four so-called "Healpix cubes" for <i>each</i> observation; e.g: 
+
+                        <ul class="list-unstyled tree-ul">
+                            Healpix
+                            <ul class="list-unstyled tree-ul">
+                                <li>1160572216_even_cubeXX.sav</li>
+                                <li>1160572216_even_cubeYY.sav</li>
+                                <li>1160572216_odd_cubeXX.sav</li>
+                                <li>1160572216_odd_cubeYY.sav</li>
+                            </ul>
+                        </ul>
+
+                        If you are wondering what are "Healpix cubes", why you get four of them out of each observation, and why they are 
+                        split into "odd", "even", "XX", and "YY", I invite you to consult 
+                        <a href="https://www.cambridge.org/core/journals/publications-of-the-astronomical-society-of-australia/article/fhdppsilon-epoch-of-reionisation-power-spectrum-pipeline/DBD9EF23A17F4646A98630176775EE2E" target="_blank">Barry et al. 2019</a>.
+                    </li>
+                </ul>
+
+                <p>
+                    In order to get a power spectrum out of your, say, hundreds of observations, their output <span>Healpix</span> 
+                    cubes need to be <i>integrated</i> together. This means you need to take the hundreds of 
+                    <span>{obsid}_even_cubeXX.sav</span>, <span>{obsid}_even_cubeYY.sav</span>, 
+                    <span>{obsid}_odd_cubeXX.sav</span>, <span>{obsid}_odd_cubeYY.sav</span> 
+                    files, and combine them into four final cubes.
+                </p>
+
+                <p>
+                    Before going into the details, let's take a look at the relevant directory tree for this section. Still 
+                    working off of the top-level tree in <span>/oscar/data/jpober/shared/Tutorials/fhd_eppsilon</span>:
+                </p>
+
+                <ul class="list-unstyled tree-ul">
+                    <li>
+                        data
+                        <ul class="list-unstyled tree-ul">
+                            <li>integration_lists</li>
+                            <ul class="list-unstyled tree-ul">
+                                <li>fhd_advanced_evenXX_list.txt</li>
+                                <li>fhd_advanced_evenYY_list.txt</li>
+                                <li>fhd_advanced_oddXX_list.txt</li>
+                                <li>fhd_advanced_oddYY_list.txt</li>
+                            </ul>
+                        </ul>
+                    </li>
+                    <li>
+                        fhd_outputs
+                        <ul class="list-unstyled tree-ul">
+                            <li>fhd_advanced</li>
+                        </ul>
+                    </li>
+                    <li>
+                        idl_wrappers
+                        <ul class="list-unstyled tree-ul">
+                            <li>integrate_cubes.pro</li>
+                        </ul>
+                    </li>
+                    <li>
+                        shell_scripts
+                        <ul class="list-unstyled tree-ul">
+                            <li>integration_scripts</li>
+                            <ul class="list-unstyled tree-ul">
+                                <li>fhd_advanced_integrate_even_cubeXX.sh</li>
+                                <li>fhd_advanced_integrate_even_cubeYY.sh</li>
+                                <li>fhd_advanced_integrate_odd_cubeXX.sh</li>
+                                <li>fhd_advanced_integrate_odd_cubeYY.sh</li>
+                            </ul>
+                        </ul>
+                    </li>
+                    <li>
+                        slurm_out
+                    </li>
+                </ul>
+
+                <p>
+                    Let's unpack this section one element at a time. First, let's take a look at the 
+                    <span>integrate_cubes.pro</span> procedure:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">idl</div>
+                    <pre class="custom-code"><code class="language-autoit">
+pro integrate_cubes
+
+    compile_opt strictarr
+
+    ;-- Read command-line arguments
+    args = Command_Line_Args(count=nargs)
+    filenames        = args[0]
+    save_file        = args[1]
+
+    integrate_healpix_cubes, filenames, save_file=save_file
+
+end
+                    </code></pre>
+                </div>
+
+                <p>
+                    As you can see, this is a very simple procedure. All it needs is a list of files to integrate, and 
+                    an output file name.
+                </p>
+
+                <p>
+                    The <span>filenames</span> argument should point to a <span>.txt</span> file containing the 
+                    paths to all the <span>Healpix</span> cubes you wish to integrate. <b>NOTE:</b> the integration 
+                    has to be done for all four combinations (even/odd/XX/YY) <i>separately</i>.
+                </p>
+
+                <p>
+                    As an example, if I have a bunch of <span>{obs}_even_cube_XX.sav</span> files I want to integrate, 
+                    I need to create a <span>.txt</span> file that points to each of them. For example, we may 
+                    wish to integrate the output cubes from our <span>fhd_advanced</span> run from earlier. The 
+                    corresponding integration list for the <span>even_cubeXX</span> cubes (which is found in 
+                    <span>data/integration_lists/fhd_advanced_evenXX_list.txt</span>) should look like:
+                </p>
+
+                 <div class="code-container mt-2">
+                    <div class="code-header">plaintext</div>
+                    <pre class="custom-code"><code class="language-plaintext">
+/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs/fhd_advanced/Healpix/1160573184_even_cubeXX.sav
+/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs/fhd_advanced/Healpix/1161092368_even_cubeXX.sav
+/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs/fhd_advanced/Healpix/1161700008_even_cubeXX.sav
+                    </code></pre>
+                </div>
+
+                <p>
+                    Similarly, you should create a plain text file for the other three combinations (even-YY, odd-XX, odd-YY).
+                    You can automate the <span>.txt</span> file creation via Python.
+                </p>
+
+
+                <p>
+                    Each integration list requires its own shell script to submit a job to SLURM. Here's an example for the 
+                    even-XX combination (in <span>shell_scripts/integration_scripts/fhd_advanced_integrate_even_cubeXX.sh</span>):
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+#SBATCH -J fhd_advanced_integrate_even_cubeXX
+#SBATCH -c 12
+#SBATCH --mem=200G
+#SBATCH --time=48:00:00
+#SBATCH -o /oscar/data/jpober/shared/Tutorials/fhd_eppsilon/slurm_out/fhd_advanced_integrate_even_cubeXX-%j.out
+#SBATCH -e /oscar/data/jpober/shared/Tutorials/fhd_eppsilon/slurm_out/fhd_advanced_integrate_even_cubeXX-%j.out
+#SBATCH --account=jpober-condo
+
+module load imagemagick
+module load idl
+
+retry_delay=300  # seconds
+
+while true; do
+    echo "Attempting to start IDL..."
+    output=$( idl \
+        -IDL_DEVICE ps \
+        -quiet \
+        -IDL_CPU_TPOOL_NTHREADS 12 \
+        -e integrate_cubes \
+        -args '/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/data/integration_lists/fhd_advanced_evenXX_list.txt' '/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs/fhd_advanced/Healpix/Combined_obs_even_cubeXX.sav' \
+        2>&1 )
+        
+    status=$?
+    echo "$output"
+
+    if echo "$output" | grep -q "Failed to acquire license"; then
+        echo "IDL license unavailable. Retrying in $retry_delay seconds..."
+        sleep $retry_delay
+    elif [ $status -eq 0 ]; then
+        echo "IDL ran successfully."
+        break
+    else
+        echo "IDL exited with an error (status $status)."
+        break
+    fi
+done
+                    </code></pre>
+                </div>
+
+
+
+                <p>
+                    To launch this integration job, <span>cd</span> 
+                    into the <span>fhd_eppsilon/shell_scripts/integration_scripts</span> subdirectory and run:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[integration_scripts]$ sbatch fhd_advanced_integrate_even_cubeXX.sh
+                    </code></pre>
+                </div>
+
+
+                <p>
+                    As mentioned earlier, you will need to run a separate SLURM job for all four even/odd/XX/YY combinations. 
+                    Once this is done, four "combined" Healpix cubes will appear in your 
+                     <span>fhd_outputs/fhd_advanced/Healpix</span> directory, ready to pass to <span>eppsilon</span> for 
+                     the final power spectrum.
+                </p>
+
 
                 
                 <div class="d-flex justify-content-between">
