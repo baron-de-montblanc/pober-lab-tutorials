@@ -483,7 +483,7 @@ done
                     If you're wondering what's up with the <span>while</span> loop, that's there because we only have a 
                     limited number of active IDL licenses (around 24 as of Feb. 2026). One job on SLURM = one IDL license 
                     required (I know, what a scam). The <span>while</span> loop is there as a safeguard in case you or a group member 
-                    already has a lot of active IDL jobs: it tells IDL to keep retrying until it is able to acquire a license.
+                    already has a lot of active IDL jobs: it tells the script to keep retrying until it is able to acquire a license.
                 </p>
 
                 <p>
@@ -753,9 +753,226 @@ done
                 </p>
 
 
+
+
+                <h2 id="eppsilon">eppsilon</h2>
+
+                <p>
+                    <span>eppsilon</span>, which stands for "error propagated power spectrum with interleaved observed noise", 
+                    is a package to calculate 21 cm power spectra and associated error bars and metrics from 3D image cubes. You 
+                    can view the official documentation 
+                    <a href="https://github.com/EoRImaging/eppsilon" target="_blank">here</a>. For a more detailed introdution 
+                    to the <span>FHD/eppsilon</span> pipeline, I invite you to consult 
+                    <a href="https://www.cambridge.org/core/journals/publications-of-the-astronomical-society-of-australia/article/fhdppsilon-epoch-of-reionisation-power-spectrum-pipeline/DBD9EF23A17F4646A98630176775EE2E" target="_blank">Barry et al. 2019</a>.
+                </p>
+
+                <p>
+                    The purpose of <span>eppsilon</span> is to take the <span>Healpix</span> cubes you generated 
+                    using <span>FHD</span>, and generate a power spectrum out of them. By default, 
+                    <span>eppsilon</span> knows to search for the default filenaming convention for all the 
+                    even/odd/XX/YY combinations, so all you have to specify is whatever is prepended to that file 
+                    name. In practice, this means you either want to specify the <i>obsid</i> (to produce a 
+                    power spectrum from a single observation), or you want to specify <i><span>Combined_obs</span></i> (to 
+                    produce a power spectrum from the integrated cubes spanning multiple observations).
+                </p>
+
+                <p>
+                    Let's look at the relevant directory tree for this section.
+                </p>
+
+                <ul class="list-unstyled tree-ul">
+                    <li>
+                        data
+                    </li>
+                    <li>
+                        fhd_outputs
+                        <ul class="list-unstyled tree-ul">
+                            <li>fhd_advanced
+                                <ul class="list-unstyled tree-ul">
+                                    <li>Healpix
+                                        <ul class="list-unstyled tree-ul">
+                                            <li>1160573184_even_cubeXX.sav</li>
+                                            <li>1160573184_even_cubeYY.sav</li>
+                                            <li>1160573184_odd_cubeXX.sav</li>
+                                            <li>1160573184_odd_cubeYY.sav</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        idl_wrappers
+                        <ul class="list-unstyled tree-ul">
+                            <li>eppsilon_basic.pro</li>
+                        </ul>
+                    </li>
+                    <li>
+                        shell_scripts
+                        <ul class="list-unstyled tree-ul">
+                            <li>eppsilon_basic.sh</li>
+                        </ul>
+                    </li>
+                    <li>
+                        slurm_out
+                    </li>
+                </ul>
+
+                <p>
+                    Opening up the <span>eppsilon_basic.pro</span> procedure:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">idl</div>
+                    <pre class="custom-code"><code class="language-autoit">
+pro eppsilon_basic
+
+    ;-- Read-in parameters from the command line
+    compile_opt strictarr
+    args = Command_Line_Args(count=nargs)
+    folder_name=args[0]
+    obs_range=args[1]
+
+    print,'folder_name = '+folder_name
+    print,'obs_range = '+obs_range
+
+    ;-- Custom keywords here
+    png               = 1 
+    exact_obsnames    = 1
+    refresh_binning   = 1
+    refresh_ps        = 1
+    refresh_dft       = 1
+
+    ;-- Bundle variables defined in this wrapper
+    extra = var_bundle()
+
+    ;-- Launch the main power spectrum procedure
+    ps_wrapper, folder_name, obs_range, _extra=extra
+
+end
+                    </code></pre>
+                </div>
+
+                <p>
+                    Again, very simple. It reads in a folder name and an "obs_range" keyword from the top-level 
+                    script, and passes those down to the <span>ps_wrapper</span> procedure. The "obs_range" 
+                    keyword lets you specify the string that is prepended to your <span>_even_cubeXX</span> (and all 
+                    other combinations). I think it actually searches for all items in the <span>Healpix</span> folder 
+                    containing that string, and runs the job on all of them (but I've only ever used it on one set of 
+                    cubes at a time, so I could be wrong).
+                </p>
+
+                <p>
+                    Next, let's take a look at the top-level script that calls this procedure, <span>eppsilon_basic.sh</span>:
+                </p>
+
+
+                <div class="code-container mt-2">
+                    <div class="code-header">bash</div>
+                    <pre class="custom-code"><code class="language-bash">
+#!/bin/bash
+
+#SBATCH -J eppsilon_basic
+#SBATCH -c 12
+#SBATCH --mem=64G
+#SBATCH --time=24:00:00
+#SBATCH -o /oscar/data/jpober/shared/Tutorials/fhd_eppsilon/slurm_out/eppsilon_basic.out
+#SBATCH -e /oscar/data/jpober/shared/Tutorials/fhd_eppsilon/slurm_out/eppsilon_basic.out
+#SBATCH --account=jpober-condo
+
+module load imagemagick
+module load idl
+
+retry_delay=300  # seconds
+
+while true; do
+    echo "Attempting to start IDL..."
+    output=$( idl \
+        -IDL_DEVICE ps \
+        -quiet \
+        -IDL_CPU_TPOOL_NTHREADS 12 \
+        -e eppsilon_custom \
+        -args '/oscar/data/jpober/shared/Tutorials/fhd_eppsilon/fhd_outputs/fhd_advanced/' '1160573184' \
+        2>&1 )
+        
+    status=$?
+    echo "$output"
+
+    if echo "$output" | grep -q "Failed to acquire license"; then
+        echo "IDL license unavailable. Retrying in $retry_delay seconds..."
+        sleep $retry_delay
+    elif [ $status -eq 0 ]; then
+        echo "IDL ran successfully."
+        break
+    else
+        echo "IDL exited with an error (status $status)."
+        break
+    fi
+done
+                    </code></pre>
+                </div>
+
+                <p>
+                    Here, we are specifying via <span>-args</span> to <i>only</i> run <span>eppsilon</span> on 
+                    the cubes with observation ID 1160573184 (which I've outlined in the 
+                    directory tree above). To run a power spectrum on the <i>combined</i> cubes, 
+                    we would specify <span>Combined_obs</span> instead of <span>1160573184</span> in the arguments.
+                </p>
+
+                <p>
+                    As always, to launch this job,  <span>cd</span> 
+                    into the <span>fhd_eppsilon/shell_scripts</span> directory and run:
+                </p>
+
+                <div class="code-container mt-2">
+                    <div class="code-header">shell</div>
+                    <pre class="custom-code"><code class="language-shell">
+[fhd_eppsilon/shell_scripts]$ sbatch eppsilon_basic.sh
+                    </code></pre>
+                </div>
+
+
+                <h2 id="eppsilon-outputs">eppsilon Outputs</h2>
+
+                <p>
+                    A successful <span>eppsilon</span> job will create a new folder in the 
+                    <span>fhd_outputs/fhd_advanced</span> directory:
+                </p>
+
+
+                <ul class="list-unstyled tree-ul">
+                    <li>
+                        fhd_advanced
+                        <ul class="list-unstyled tree-ul">
+                            <li>...</li>
+                            <li>ps
+                                <ul class="list-unstyled tree-ul">
+                                    <li>data</li>
+                                    <li>plots
+                                        <ul class="list-unstyled tree-ul">
+                                            <li>1d_binning</li>
+                                            <li>2d_binning</li>
+                                            <li>...</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>...</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p>
+                    I'm using ... here to indicate that there are a <i>lot</i> more files and folders than this, 
+                    but the ones I'm explicitly writing out here are the most important. Specifically, the 
+                    <span>plots/1d_binning</span> and <span>plots/2d_binning</span> contain your ultimate 
+                    power spectrum data products.
+                </p>
+
+
                 
                 <div class="d-flex justify-content-between">
-                    <p class="last-edit">Last edit: 2026-02-07</p>
+                    <p class="last-edit">Last edit: 2026-02-08</p>
                     <p class="last-edit">Author: Jade Ducharme</p>
                 </div>
 
