@@ -1,7 +1,7 @@
 async function loadTemplate(id, file, callback) {
     let element = document.getElementById(id);
     if (element) {
-        let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
+        let basePath = window.location.hostname === "jade-ducharme.github.io" ? "/pober-lab-tutorials" : "";
         
         console.log(`Fetching: ${file}`);  // Debugging output
 
@@ -49,7 +49,7 @@ function initializeNavbarDropdowns() {
 
 // Load navbar and reapply jQuery event listeners
 document.addEventListener("DOMContentLoaded", function () {
-    let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
+    let basePath = window.location.hostname === "jade-ducharme.github.io" ? "/pober-lab-tutorials" : "";
 
     loadTemplate("header-container", `${basePath}/partials/header.html`);
     loadTemplate("footer-template", `${basePath}/partials/footer.html`);

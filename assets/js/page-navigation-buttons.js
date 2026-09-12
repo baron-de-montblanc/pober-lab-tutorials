@@ -11,7 +11,7 @@ const observer = new MutationObserver(() => {
 observer.observe(document.body, { childList: true, subtree: true });
 
 function addNavigationButtons(footer) {
-    let basePath = window.location.hostname === "baron-de-montblanc.github.io" ? "/pober-lab-tutorials" : "";
+    let basePath = window.location.hostname === "jade-ducharme.github.io" ? "/pober-lab-tutorials" : "";
 
     // Define ordered list of pages
     const pageList = [
